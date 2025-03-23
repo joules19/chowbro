@@ -1,0 +1,105 @@
+
+
+# Ignore Visual Studio-specific files
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.ide
+
+# Ignore build outputs
+bin/
+obj/
+out/
+TestResults/
+*.log
+*.cache
+*.pdb
+*.ilk
+*.idb
+*.obj
+*.tlb
+*.tlg
+*.pch
+*.aps
+*.ncb
+*.sbr
+*.iobj
+*.ipdb
+*.opendb
+*.tlog
+
+# Ignore .NET-specific files
+project.lock.json
+project.fragment.lock.json
+artifacts/
+*.nuget.props
+*.nuget.targets
+
+# Ignore packages
+packages/
+*.nupkg
+*.snupkg
+*.nuspec
+.nuget/
+
+# Ignore secrets and sensitive files
+appsettings.Development.json
+appsettings.Local.json
+appsettings.json
+appsettings.*.json
+secrets.json
+secrets/
+.env
+*.key
+*.pem
+*.pfx
+*.p12
+
+# Ignore Rider and JetBrains files
+.idea/
+*.sln.iml
+
+# Ignore VS Code-specific files
+.vscode/
+
+# Ignore Docker files
+**/[Dd]ockerfile
+**/[Dd]ocker-*
+
+# Ignore logs and temporary files
+*.log
+logs/
+**/log/
+**/logs/
+*.tlog
+
+# Ignore database and migration-related files
+Migrations/
+*.mdf
+*.ldf
+*.sqlite
+*.db
+
+# Ignore generated files from API documentation
+swagger/
+swagger.json
+swagger.yaml
+
+# Ignore Publish outputs
+publish/
+wwwroot/
+# Default ignored files
+/shelf/
+/workspace.xml
+# Rider ignored files
+/modules.xml
+/.idea.Chowbro.iml
+/contentModel.xml
+/projectSettingsUpdater.xml
+# Editor-based HTTP Client requests
+/httpRequests/
+# Datasource local storage ignored files
+/dataSources/
+/dataSources.local.xml

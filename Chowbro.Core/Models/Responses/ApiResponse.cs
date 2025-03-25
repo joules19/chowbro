@@ -1,6 +1,6 @@
 using System.Net;
 
-namespace Chowbro.Core
+namespace Chowbro.Core.Models
 {
     public class ApiResponse<T>
     {
@@ -26,7 +26,5 @@ namespace Chowbro.Core
         {
             return new ApiResponse<T>(statusCode, message, default, errors);
         }
-        
-       
     }
 }

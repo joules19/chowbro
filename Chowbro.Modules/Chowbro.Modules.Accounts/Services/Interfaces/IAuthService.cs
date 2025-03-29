@@ -1,4 +1,5 @@
 using Chowbro.Core;
+using Chowbro.Core.Models;
 using Chowbro.Infrastructure.Auth;
 using Chowbro.Modules.Accounts.DTOs;
 

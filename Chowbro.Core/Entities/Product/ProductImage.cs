@@ -1,3 +1,4 @@
+using Chowbro.Infrastructure.Entities.Products;
 using System.ComponentModel.DataAnnotations;
 
 namespace Chowbro.Infrastructure.Entities.Vendor

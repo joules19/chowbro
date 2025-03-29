@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.Net;
 using Chowbro.Infrastructure.Helpers;
+using Chowbro.Core.Models;
 
 namespace Chowbro.Modules.Accounts.Services
 {
@@ -48,7 +49,7 @@ namespace Chowbro.Modules.Accounts.Services
                 existingUser.OtpExpires = DateTime.UtcNow.AddMinutes(10);
                 await _userManager.UpdateAsync(existingUser);
 
-                await _otpService.SendOtpAsync(existingUser.Email!, newOtp, true);
+                // await _otpService.SendOtpAsync(existingUser.Email!, newOtp, true);
                 return ApiResponse<OtpResponse>.Success(new OtpResponse
                 {
                     RequiresOtp = true,

@@ -1,3 +1,4 @@
+using Chowbro.Infrastructure.Entities.Products;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 

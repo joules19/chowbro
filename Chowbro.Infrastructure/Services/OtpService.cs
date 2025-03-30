@@ -1,3 +1,4 @@
+using Chowbro.Core.Interfaces.Notifications;
 using Microsoft.Extensions.Configuration;
 using Twilio;
 using Twilio.Rest.Api.V2010.Account;
@@ -5,10 +6,6 @@ using Twilio.Types;
 
 namespace Chowbro.Infrastructure.Services
 {
-    public interface IOtpService
-    {
-        Task SendOtpAsync(string contactInfo, string otp, bool isEmail = false);
-    }
 
     public class OtpService : IOtpService
     {
@@ -21,7 +18,7 @@ namespace Chowbro.Infrastructure.Services
             _emailService = emailService;
 
             // Initialize Twilio only if needed
-            TwilioClient.Init(_configuration["Twilio:AccountSid"], _configuration["Twilio:AuthToken"]);
+            // TwilioClient.Init(_configuration["Twilio:AccountSid"], _configuration["Twilio:AuthToken"]);
         }
 
         public async Task SendOtpAsync(string contactInfo, string otp, bool isEmail = false)

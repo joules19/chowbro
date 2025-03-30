@@ -1,5 +1,6 @@
 ﻿using Chowbro.Core.Interfaces.Auth;
 using Chowbro.Core.Interfaces.Media;
+using Chowbro.Core.Interfaces.Notifications;
 using Chowbro.Core.Interfaces.Vendors;
 using Chowbro.Infrastructure.Persistence.Repositories;
 using Chowbro.Infrastructure.Services;
@@ -18,6 +19,9 @@ namespace Chowbro.Infrastructure
 
             // Services
             services.AddScoped<ICurrentUserService, CurrentUserService>();
+            services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<IOtpService, OtpService>();
+
             services.AddScoped<IVendorProvider, VendorProvider>();
             services.AddScoped<ICloudinaryService, CloudinaryService>();
 

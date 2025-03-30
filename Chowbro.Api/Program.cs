@@ -35,13 +35,10 @@ builder.Services.AddAccountsModule();
 
 // Emailing
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
-builder.Services.AddScoped<IEmailService, EmailService>();
-
-// Otp 
-builder.Services.AddScoped<IOtpService, OtpService>();
 
 builder.Services
     .AddInfrastructure()  // Infrastructure layer registrations
+    .AddAccountsModule()
     .AddVendorModule();
 
 // JWT Authentication

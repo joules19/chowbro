@@ -1,4 +1,5 @@
 using Chowbro.Core.Entities;
+using Chowbro.Core.Interfaces.Notifications;
 using Chowbro.Core.Models;
 using Chowbro.Infrastructure.Auth;
 using Chowbro.Infrastructure.Helpers;

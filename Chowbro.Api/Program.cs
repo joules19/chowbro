@@ -1,13 +1,14 @@
+using Chowbro.Core.Entities;
 using Chowbro.Infrastructure;
-using Chowbro.Infrastructure.Auth;
+using Chowbro.Infrastructure.Middlewares;
+using Chowbro.Infrastructure.Services;
+using Chowbro.Infrastructure.Settings;
+using Chowbro.Modules.Accounts;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Chowbro.Infrastructure.Services;
-using Chowbro.Infrastructure.Settings;
-using Chowbro.Modules.Accounts;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,6 +39,10 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 
 // Otp 
 builder.Services.AddScoped<IOtpService, OtpService>();
+
+builder.Services
+    .AddInfrastructure()  // Infrastructure layer registrations
+    .AddVendorModule();
 
 // JWT Authentication
 var key = Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Secret"]!);
@@ -79,6 +84,7 @@ app.UseCors("AllowAll");
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseSwagger();
 app.UseSwaggerUI();
 

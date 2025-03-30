@@ -1,6 +1,27 @@
-namespace Chowbro.Api.Controllers.Areas.Vendors;
+using Chowbro.Api.Controllers;
+using Chowbro.Modules.Vendors.Commands;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
-public class ProductController
+[Area("Vendors")]
+[Route("api/vendors/products")]
+[Authorize(Roles = "Vendor")]
+public class ProductController : BaseController
 {
-    
+    private readonly IMediator _mediator;
+
+    public ProductController(IMediator mediator)
+    {
+        _mediator = mediator;
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> AddProduct([FromForm] AddProductCommand command)
+    {
+        var result = await _mediator.Send(command);
+        return Ok(result);
+    }
+
+    // Other actions for update, delete, etc.
 }

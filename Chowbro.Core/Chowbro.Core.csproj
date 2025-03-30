@@ -7,13 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Interfaces\Vendors\" />
-    <Folder Include="Middlewares\" />
     <Folder Include="Models\" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="CloudinaryDotNet" Version="1.27.5" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.3" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.3" />
     <PackageReference Include="System.Text.Json" Version="9.0.3" />
     <PackageReference Include="Twilio" Version="7.9.0" />

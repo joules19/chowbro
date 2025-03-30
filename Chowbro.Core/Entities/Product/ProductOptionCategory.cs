@@ -1,25 +1,17 @@
-using Chowbro.Infrastructure.Entities.Products;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using Chowbro.Core.Entities;
+using static Chowbro.Core.Enums.Product;
 
-namespace Chowbro.Infrastructure.Entities.Vendor
+public class ProductOptionCategory : BaseEntity
 {
-    public class ProductOptionCategory : BaseEntity
-    {
-        public Guid Id { get; set; } = Guid.NewGuid();  
-        [Required]
-        [StringLength(50)]
-        public required string Name { get; set; }
+    public string Name { get; set; }
+    public string? Description { get; set; }
 
-        public string? Description { get; set; }
-        public int MinAllowed { get; set; } = 1;
-        public int MaxAllowed { get; set; } = 1;
+    public bool IsRequired { get; set; }
+    public OptionSelectionType SelectionType { get; set; } // Single, Multiple
+    public int? MinOptions { get; set; } // For multiple selection
+    public int? MaxOptions { get; set; } // For multiple selection
 
-        // Foreign key
-        public Guid ProductId { get; set; }
-        public Product Product { get; set; }
-
-        // Navigation property
-        public ICollection<ProductOption> Options { get; set; } = new List<ProductOption>();
-    }
+    public Guid ProductId { get; set; }
+    public Product Product { get; set; }
+    public ICollection<ProductOption> Options { get; set; } = new List<ProductOption>();
 }

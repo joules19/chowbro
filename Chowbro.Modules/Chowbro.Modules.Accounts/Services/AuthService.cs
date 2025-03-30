@@ -1,9 +1,7 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
-using Chowbro.Core;
+using Chowbro.Core.Entities;
+using Chowbro.Core.Models;
 using Chowbro.Infrastructure.Auth;
+using Chowbro.Infrastructure.Helpers;
 using Chowbro.Infrastructure.Services;
 using Chowbro.Modules.Accounts.DTOs;
 using Chowbro.Modules.Accounts.Services.Interfaces;
@@ -11,9 +9,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 using System.Net;
-using Chowbro.Infrastructure.Helpers;
-using Chowbro.Core.Models;
+using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace Chowbro.Modules.Accounts.Services
 {

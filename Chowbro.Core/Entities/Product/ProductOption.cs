@@ -1,22 +1,11 @@
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using Chowbro.Core.Entities;
 
-namespace Chowbro.Infrastructure.Entities.Vendor
+public class ProductOption : BaseEntity
 {
-
-    public class ProductOption : BaseEntity
-    {
-        public Guid Id { get; set; } = Guid.NewGuid();  
-        [Required]
-        [StringLength(50)]
-        public string Name { get; set; }
-
-        [Column(TypeName = "decimal(18,2)")]
-        public decimal? PriceModifier { get; set; }
-
-        // Foreign key
-        public Guid CategoryId { get; set; }
-        public ProductOptionCategory Category { get; set; }
-    }
-
+    public string Name { get; set; }
+    public decimal AdditionalPrice { get; set; }
+    public bool IsAvailable { get; set; } = true;
+    public Guid OptionCategoryId { get; set; }
+    public int DisplayOrder { get; set; }
+    public ProductOptionCategory OptionCategory { get; set; }
 }

@@ -1,17 +1,17 @@
-using Chowbro.Infrastructure.Entities.Products;
-using System.ComponentModel.DataAnnotations;
 
-namespace Chowbro.Infrastructure.Entities.Vendor
+using Chowbro.Core.Entities;
+
+public class ProductImage : BaseEntity
 {
-    public class ProductImage : BaseEntity
-    {
-        public Guid Id { get; set; } = Guid.NewGuid();  
-        [Required]
-        public string ImageUrl { get; set; }
-        public string Caption { get; set; }
+    public Guid ProductId { get; set; }
+    public Product Product { get; set; }
+    public string Caption { get; set; }
+    public string Url { get; set; }
 
-        // Foreign key
-        public Guid ProductId { get; set; }
-        public Product Product { get; set; }
-    }
+    public bool IsMain { get; set; }
+
+    public string ImageUrl { get; set; }
+    public string PublicId { get; set; } // Cloudinary public ID
+    public int DisplayOrder { get; set; }
+
 }

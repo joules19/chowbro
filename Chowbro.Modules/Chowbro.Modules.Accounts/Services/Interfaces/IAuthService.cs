@@ -1,6 +1,5 @@
-using Chowbro.Core;
+using Chowbro.Core.Entities;
 using Chowbro.Core.Models;
-using Chowbro.Infrastructure.Auth;
 using Chowbro.Modules.Accounts.DTOs;
 
 namespace Chowbro.Modules.Accounts.Services.Interfaces

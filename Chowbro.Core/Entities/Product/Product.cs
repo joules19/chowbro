@@ -1,37 +1,25 @@
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Chowbro.Infrastructure.Entities.Vendor;
+using Chowbro.Core.Entities;
+using static Chowbro.Core.Enums.Product;
 
-namespace Chowbro.Infrastructure.Entities.Products
+public class Product : BaseEntity
 {
-    public class Product : BaseEntity
-    {
-        public Guid Id { get; set; } = Guid.NewGuid();  
+    public string Name { get; set; }
+    public string Description { get; set; }
+    public decimal BasePrice { get; set; }
+    public bool IsAvailable { get; set; }
+    public int PreparationTime { get; set; } // in minutes
+    public ProductStatus Status { get; set; } = ProductStatus.Active;
 
-        [Required]
-        [StringLength(100)]
-        public required string Name { get; set; }
+    // Relationships
+    public Guid VendorId { get; set; }
+    public Vendor Vendor { get; set; }
 
-        [StringLength(500)]
-        public string? Description { get; set; }
+    public Guid? BranchId { get; set; }
+    public Branch Branch { get; set; }
 
-        [Required]
-        [Column(TypeName = "decimal(18,2)")]
-        public decimal Price { get; set; }
+    public Guid CategoryId { get; set; }
+    public ProductCategory Category { get; set; }
 
-        public string? SKU { get; set; }
-        public bool IsActive { get; set; } = true;
-        public string? Category { get; set; }
-
-        // Foreign keys
-        public Guid VendorId { get; set; }
-        public Vendor.Vendor Vendor { get; set; }
-
-        public Guid? BranchId { get; set; }
-        public Branch Branch { get; set; }
-
-        // Navigation properties
-        public ICollection<ProductOptionCategory> OptionCategories { get; set; } = new List<ProductOptionCategory>();
-        public ICollection<ProductImage> Images { get; set; } = new List<ProductImage>();
-    }
+    public ICollection<ProductImage> Images { get; set; } = new List<ProductImage>();
+    public ICollection<ProductOptionCategory> OptionCategories { get; set; } = new List<ProductOptionCategory>();
 }

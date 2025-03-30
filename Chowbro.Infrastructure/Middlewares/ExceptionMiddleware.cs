@@ -1,20 +1,27 @@
+using Chowbro.Core.Middlewares;
 using Chowbro.Core.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.Net;
 using System.Text.Json;
 
-namespace Chowbro.Core.Middlewares
+namespace Chowbro.Infrastructure.Middlewares
 {
     public class ExceptionMiddleware
     {
         private readonly RequestDelegate _next;
         private readonly ILogger<ExceptionMiddleware> _logger;
+        private readonly IHostEnvironment _env;
 
-        public ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger)
+        public ExceptionMiddleware(
+            RequestDelegate next,
+            ILogger<ExceptionMiddleware> logger,
+            IHostEnvironment env)
         {
             _next = next;
             _logger = logger;
+            _env = env;
         }
 
         public async Task InvokeAsync(HttpContext httpContext)
@@ -25,20 +32,31 @@ namespace Chowbro.Core.Middlewares
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Unhandled Exception: {ex}");
+                _logger.LogError(ex, "Unhandled Exception");
                 await HandleExceptionAsync(httpContext, ex);
             }
         }
 
-        private static async Task HandleExceptionAsync(HttpContext context, Exception exception)
+        private async Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
             context.Response.ContentType = "application/json";
-            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
-            var response = ApiResponse<string>.Fail(null,"An unexpected error occurred");
-            var jsonResponse = JsonSerializer.Serialize(response);
+            var response = exception switch
+            {
+                VendorRequiredException => ApiResponse<string>.Fail(
+                    data: null,
+                    message: exception.Message,
+                    statusCode: HttpStatusCode.Forbidden
+                ),
+                _ => ApiResponse<string>.Fail(
+                    data: null,
+                    message: _env.IsDevelopment() ? exception.Message : "An unexpected error occurred",
+                    statusCode: HttpStatusCode.InternalServerError
+                )
+            };
 
-            await context.Response.WriteAsync(jsonResponse);
+            context.Response.StatusCode = (int)response.StatusCode;
+            await context.Response.WriteAsync(JsonSerializer.Serialize(response));
         }
     }
 }

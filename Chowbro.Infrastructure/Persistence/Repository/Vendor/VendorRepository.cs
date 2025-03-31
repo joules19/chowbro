@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using static Chowbro.Core.Enums.Vendor;
 
@@ -18,62 +19,65 @@ namespace Chowbro.Infrastructure.Persistence.Repositories
             _context = context;
         }
 
-        public async Task<Vendor> GetByIdAsync(Guid id)
+        public async Task<Vendor> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
             return await _context.Vendors
                 .Include(v => v.Branches)
                 .Include(v => v.Products)
                 .Include(v => v.ProductCategories)
-                .FirstOrDefaultAsync(v => v.Id == id);
+                .FirstOrDefaultAsync(v => v.Id == id, cancellationToken);
         }
 
-        public async Task<IEnumerable<Vendor>> GetAllAsync()
+        public async Task<IEnumerable<Vendor>> GetAllAsync(CancellationToken cancellationToken = default)
         {
             return await _context.Vendors
                 .Include(v => v.Branches)
-                .ToListAsync();
+                .AsNoTracking()
+                .ToListAsync(cancellationToken);
         }
 
-        public async Task<IEnumerable<Vendor>> GetByStatusAsync(VendorStatus status)
+        public async Task<IEnumerable<Vendor>> GetByStatusAsync(VendorStatus status, CancellationToken cancellationToken = default)
         {
             return await _context.Vendors
                 .Where(v => v.Status == status)
                 .Include(v => v.Branches)
-                .ToListAsync();
+                .AsNoTracking()
+                .ToListAsync(cancellationToken);
         }
 
-        public async Task AddAsync(Vendor vendor)
+        public async Task AddAsync(Vendor vendor, CancellationToken cancellationToken = default)
         {
-            await _context.Vendors.AddAsync(vendor);
-            await _context.SaveChangesAsync();
+            await _context.Vendors.AddAsync(vendor, cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task UpdateAsync(Vendor vendor)
+        public async Task UpdateAsync(Vendor vendor, CancellationToken cancellationToken = default)
         {
             _context.Vendors.Update(vendor);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task DeleteAsync(Vendor vendor)
+        public async Task DeleteAsync(Vendor vendor, CancellationToken cancellationToken = default)
         {
             vendor.IsDeleted = true;
             vendor.DeletedAt = DateTime.UtcNow;
-            await UpdateAsync(vendor);
+            await UpdateAsync(vendor, cancellationToken);
         }
 
-        public async Task<bool> ExistsAsync(Guid id)
+        public async Task<bool> ExistsAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            return await _context.Vendors.AnyAsync(v => v.Id == id);
+            return await _context.Vendors.AnyAsync(v => v.Id == id, cancellationToken);
         }
 
-        public async Task<IEnumerable<Branch>> GetBranchesAsync(Guid vendorId)
+        public async Task<IEnumerable<Branch>> GetBranchesAsync(Guid vendorId, CancellationToken cancellationToken = default)
         {
             return await _context.Branches
                 .Where(b => b.VendorId == vendorId)
-                .ToListAsync();
+                .AsNoTracking()
+                .ToListAsync(cancellationToken);
         }
 
-        public async Task<IEnumerable<Product>> GetProductsAsync(Guid vendorId)
+        public async Task<IEnumerable<Product>> GetProductsAsync(Guid vendorId, CancellationToken cancellationToken = default)
         {
             return await _context.Products
                 .Where(p => p.VendorId == vendorId)
@@ -81,14 +85,38 @@ namespace Chowbro.Infrastructure.Persistence.Repositories
                 .Include(p => p.OptionCategories)
                     .ThenInclude(oc => oc.Options)
                 .Include(p => p.Category)
-                .ToListAsync();
+                .AsNoTracking()
+                .ToListAsync(cancellationToken);
         }
 
-        public async Task<IEnumerable<ProductCategory>> GetProductCategoriesAsync(Guid vendorId)
+        public async Task<IEnumerable<ProductCategory>> GetProductCategoriesAsync(Guid vendorId, CancellationToken cancellationToken = default)
         {
             return await _context.ProductCategories
                 .Where(pc => pc.VendorId == vendorId)
-                .ToListAsync();
+                .AsNoTracking()
+                .ToListAsync(cancellationToken);
+        }
+
+        public async Task<IEnumerable<Vendor>> GetPendingApprovalVendorsAsync(CancellationToken cancellationToken = default)
+        {
+            return await _context.Vendors
+                .Where(v => v.Status == VendorStatus.PendingApproval)
+                .Include(v => v.Branches)
+                .Include(v => v.User)
+                .AsNoTracking()
+                .ToListAsync(cancellationToken);
+        }
+
+        public async Task<Vendor> GetByUserIdAsync(string userId, CancellationToken cancellationToken = default)
+        {
+            return await _context.Vendors
+                .Include(v => v.Branches)
+                .FirstOrDefaultAsync(v => v.UserId == userId, cancellationToken);
+        }
+
+        public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            return await _context.SaveChangesAsync(cancellationToken);
         }
     }
 }

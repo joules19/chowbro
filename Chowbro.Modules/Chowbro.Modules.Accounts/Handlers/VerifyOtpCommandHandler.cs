@@ -30,13 +30,18 @@ namespace Chowbro.Modules.Accounts.Commands.Handlers
 
         public async Task<ApiResponse<AuthResponse>> Handle(VerifyOtpCommand request, CancellationToken cancellationToken)
         {
-            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Email == request.ContactInfo || u.PhoneNumber == request.ContactInfo);
+            var user = await _userManager.Users.FirstOrDefaultAsync(u =>
+                u.Email == request.ContactInfo || u.PhoneNumber == request.ContactInfo);
 
             if (user == null)
                 return ApiResponse<AuthResponse>.Fail(null, "User not found.", HttpStatusCode.NotFound);
 
-            if (string.IsNullOrEmpty(user.OtpCode) || user.OtpExpires == null || user.OtpCode != request.Otp || user.OtpExpires < DateTime.UtcNow)
-                return ApiResponse<AuthResponse>.Fail(null, "Invalid or expired OTP.", statusCode: HttpStatusCode.BadRequest);
+            if (string.IsNullOrEmpty(user.OtpCode) ||
+                user.OtpExpires == null ||
+                user.OtpCode != request.Otp ||
+                user.OtpExpires < DateTime.UtcNow)
+                return ApiResponse<AuthResponse>.Fail(null, "Invalid or expired OTP.",
+                    statusCode: HttpStatusCode.BadRequest);
 
             user.OtpCode = null;
             user.OtpExpires = null;
@@ -47,7 +52,10 @@ namespace Chowbro.Modules.Accounts.Commands.Handlers
 
         private async Task<ApiResponse<AuthResponse>> GenerateJwtToken(ApplicationUser user)
         {
-            var key = Encoding.UTF8.GetBytes(_configuration["JwtSettings:Secret"]!);
+            var jwtSettings = _configuration.GetSection("JwtSettings");
+            var key = Encoding.UTF8.GetBytes(jwtSettings["Secret"]!);
+            var expiresInMinutes = _configuration.GetValue<int>("JwtSettings:ExpiresInMinutes");
+
             var roles = await _userManager.GetRolesAsync(user);
 
             var claims = new[]
@@ -56,14 +64,19 @@ namespace Chowbro.Modules.Accounts.Commands.Handlers
                 new Claim(JwtRegisteredClaimNames.Email, user.Email!),
                 new Claim(JwtRegisteredClaimNames.UniqueName, user.PhoneNumber!),
                 new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}"),
-                new Claim(ClaimTypes.Role, string.Join(",", roles))
+                new Claim(ClaimTypes.Role, string.Join(",", roles)),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddMinutes(30),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)
+                Expires = DateTime.UtcNow.AddMinutes(expiresInMinutes),
+                Issuer = jwtSettings["Issuer"],
+                Audience = jwtSettings["Audience"],
+                SigningCredentials = new SigningCredentials(
+                    new SymmetricSecurityKey(key),
+                    SecurityAlgorithms.HmacSha256)
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();

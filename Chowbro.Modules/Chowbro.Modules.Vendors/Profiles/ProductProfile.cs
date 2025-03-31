@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using Chowbro.Modules.Vendors.Commands;
-using static Chowbro.Modules.Vendors.DTOs.ProductModel;
+using Chowbro.Modules.Vendors.Commands.Product;
+using static Chowbro.Modules.Vendors.DTOs.Product.ProductModel;
 
 public class ProductProfile : Profile
 {

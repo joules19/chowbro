@@ -1,4 +1,5 @@
 using Chowbro.Core.Entities;
+using Chowbro.Core.Entities.Location;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +23,10 @@ namespace Chowbro.Infrastructure
         public DbSet<ProductImage> ProductImages { get; set; }
         public DbSet<ProductOption> ProductOptions { get; set; }
         public DbSet<ProductOptionCategory> ProductOptionCategories { get; set; }
+
+        // Locations
+        public DbSet<State> States { get; set; }
+        public DbSet<Lga> Lgas { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -58,6 +63,25 @@ namespace Chowbro.Infrastructure
                 .HasForeignKey(o => o.OptionCategoryId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            // State and LGA relationships
+            builder.Entity<State>()
+                .HasMany(s => s.Lgas)
+                .WithOne(l => l.State)
+                .HasForeignKey(l => l.StateId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<Branch>()
+                .HasOne(b => b.State)
+                .WithMany()
+                .HasForeignKey(b => b.StateId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Branch>()
+                .HasOne(b => b.Lga)
+                .WithMany()
+                .HasForeignKey(b => b.LgaId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             // Configure enums
             builder.Entity<ProductOptionCategory>()
                 .Property(oc => oc.SelectionType)
@@ -70,11 +94,16 @@ namespace Chowbro.Infrastructure
             builder.Entity<Branch>()
                 .HasIndex(b => b.VendorId);
 
+            builder.Entity<Lga>()
+                .HasIndex(l => l.StateId);
+
             // Configure soft delete filter
             builder.Entity<Vendor>().HasQueryFilter(v => !v.IsDeleted);
             builder.Entity<Branch>().HasQueryFilter(b => !b.IsDeleted);
             builder.Entity<Product>().HasQueryFilter(p => !p.IsDeleted);
             builder.Entity<ProductCategory>().HasQueryFilter(pc => !pc.IsDeleted);
+            builder.Entity<State>().HasQueryFilter(s => !s.IsDeleted);
+            builder.Entity<Lga>().HasQueryFilter(l => !l.IsDeleted);
         }
     }
 }

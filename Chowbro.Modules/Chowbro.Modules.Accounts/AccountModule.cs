@@ -1,5 +1,6 @@
 using Chowbro.Core.Interfaces.Notifications;
 using Chowbro.Infrastructure.Services;
+using Chowbro.Modules.Accounts.Data.Seeders;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
@@ -17,7 +18,8 @@ namespace Chowbro.Modules.Accounts
             // Register validators
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
-            services.AddScoped<IOtpService, OtpService>(); 
+            services.AddScoped<IOtpService, OtpService>();
+            services.AddScoped<SuperAdminSeeder>();
 
             return services;
         }

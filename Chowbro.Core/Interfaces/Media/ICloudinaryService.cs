@@ -7,7 +7,7 @@ namespace Chowbro.Core.Interfaces.Media
     {
         Task<ImageUploadResult> UploadImageAsync(IFormFile file);
         Task<DeletionResult> DeleteImageAsync(string publicId);
-        Task<ImageUploadResult> UpdateImageAsync(string publicId, IFormFile newFile);
+        Task<ImageUploadResult> UpdateImageAsync(string publicId, IFormFile newFile); 
         Task<bool> ImageExistsAsync(string publicId);
     }
 }

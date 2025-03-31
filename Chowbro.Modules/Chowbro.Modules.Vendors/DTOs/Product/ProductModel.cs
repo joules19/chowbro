@@ -1,6 +1,6 @@
-using Chowbro.Modules.Vendors.Commands;
+using Chowbro.Modules.Vendors.Commands.Product;
 
-namespace Chowbro.Modules.Vendors.DTOs;
+namespace Chowbro.Modules.Vendors.DTOs.Product;
 
 public class ProductModel
 {

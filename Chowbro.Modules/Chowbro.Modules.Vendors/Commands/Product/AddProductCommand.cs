@@ -2,9 +2,9 @@
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using static Chowbro.Core.Enums.Product;
-using static Chowbro.Modules.Vendors.DTOs.ProductModel;
+using static Chowbro.Modules.Vendors.DTOs.Product.ProductModel;
 
-namespace Chowbro.Modules.Vendors.Commands;
+namespace Chowbro.Modules.Vendors.Commands.Product;
 
 public class AddProductCommand : IRequest<ApiResponse<ProductDto>>
 {

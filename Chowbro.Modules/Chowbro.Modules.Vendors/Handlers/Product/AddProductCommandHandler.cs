@@ -3,10 +3,10 @@ using AutoMapper;
 using Chowbro.Core.Interfaces.Auth;
 using Chowbro.Core.Interfaces.Media;
 using Chowbro.Core.Models;
-using Chowbro.Modules.Vendors.Commands;
+using Chowbro.Modules.Vendors.Commands.Product;
 using MediatR;
 using System.Net;
-using static Chowbro.Modules.Vendors.DTOs.ProductModel;
+using static Chowbro.Modules.Vendors.DTOs.Product.ProductModel;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 public class AddProductCommandHandler : IRequestHandler<AddProductCommand, ApiResponse<ProductDto>>

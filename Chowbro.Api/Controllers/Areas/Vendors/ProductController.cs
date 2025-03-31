@@ -1,5 +1,5 @@
 using Chowbro.Api.Controllers;
-using Chowbro.Modules.Vendors.Commands;
+using Chowbro.Modules.Vendors.Commands.Product;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

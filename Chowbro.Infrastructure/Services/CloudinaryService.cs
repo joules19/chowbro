@@ -3,6 +3,7 @@ using Chowbro.Infrastructure.Settings;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace Chowbro.Infrastructure.Services
@@ -12,16 +13,19 @@ namespace Chowbro.Infrastructure.Services
         private readonly Cloudinary _cloudinary;
         private readonly CloudinarySettings _settings;
 
-        public CloudinaryService(IOptions<CloudinarySettings> settings)
+        public CloudinaryService(IOptions<CloudinarySettings> settings, ILogger<CloudinaryService> logger)
         {
             _settings = settings.Value;
+            logger.LogDebug($"Cloudinary Config: {_settings.CloudName}, {_settings.ApiKey?.Substring(0, 3)}...");
 
-            var account = new Account(
-                _settings.CloudName,
-                _settings.ApiKey,
-                _settings.ApiSecret);
+            if (string.IsNullOrWhiteSpace(_settings.CloudName))
+                throw new ApplicationException("Cloudinary CloudName is not configured");
 
-            _cloudinary = new Cloudinary(account);
+            _cloudinary = new Cloudinary(new Account(
+                   _settings.CloudName,
+                   _settings.ApiKey,
+                   _settings.ApiSecret));
+
             _cloudinary.Api.Secure = true;
         }
 

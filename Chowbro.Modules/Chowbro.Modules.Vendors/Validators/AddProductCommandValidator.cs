@@ -1,4 +1,4 @@
-﻿using Chowbro.Modules.Vendors.Commands;
+﻿using Chowbro.Modules.Vendors.Commands.Product;
 using FluentValidation;
 using static Chowbro.Core.Enums.Product;
 

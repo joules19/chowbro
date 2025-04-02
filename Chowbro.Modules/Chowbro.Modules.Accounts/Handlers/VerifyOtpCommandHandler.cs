@@ -45,12 +45,16 @@ namespace Chowbro.Modules.Accounts.Commands.Handlers
 
             user.OtpCode = null;
             user.OtpExpires = null;
+            if (!user.PhoneNumberConfirmed)
+            {
+                user.PhoneNumberConfirmed = true;
+            }
             await _userManager.UpdateAsync(user);
 
             return await GenerateJwtToken(user);
         }
 
-        private async Task<ApiResponse<AuthResponse>> GenerateJwtToken(ApplicationUser user)
+        public async Task<ApiResponse<AuthResponse>> GenerateJwtToken(ApplicationUser user)
         {
             var jwtSettings = _configuration.GetSection("JwtSettings");
             var key = Encoding.UTF8.GetBytes(jwtSettings["Secret"]!);

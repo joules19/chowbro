@@ -35,21 +35,23 @@ namespace Chowbro.Modules.Accounts.Commands.Handlers
 
             if (existingUser != null)
             {
-                if (existingUser.EmailConfirmed)
+                if (existingUser.EmailConfirmed || existingUser.PhoneNumberConfirmed)
                     return ApiResponse<OtpResponse>.Fail(null, "Email already in use. Please login.", HttpStatusCode.Conflict);
 
-                // Resend OTP instead of creating a new user
-                var newOtp = OtpHelper.GenerateOtp();
-                existingUser.OtpCode = newOtp;
-                existingUser.OtpExpires = DateTime.UtcNow.AddMinutes(10);
-                await _userManager.UpdateAsync(existingUser);
+                return ApiResponse<OtpResponse>.Fail(null, "Email or phone number already in use. Please login.", HttpStatusCode.Conflict);
 
-                // await _otpService.SendOtpAsync(existingUser.Email!, newOtp, true);
-                return ApiResponse<OtpResponse>.Success(new OtpResponse
-                {
-                    RequiresOtp = true,
-                    Message = "An OTP has been resent to your email."
-                }, statusCode: HttpStatusCode.OK);
+                // Resend OTP instead of creating a new user
+                //var newOtp = OtpHelper.GenerateOtp();
+                //existingUser.OtpCode = newOtp;
+                //existingUser.OtpExpires = DateTime.UtcNow.AddMinutes(10);
+                //await _userManager.UpdateAsync(existingUser);
+
+                //// await _otpService.SendOtpAsync(existingUser.Email!, newOtp, true);
+                //return ApiResponse<OtpResponse>.Success(new OtpResponse
+                //{
+                //    RequiresOtp = true,
+                //    Message = "An OTP has been resent to your email."
+                //}, statusCode: HttpStatusCode.OK);
             }
 
             // Generate a password using the email
@@ -85,7 +87,7 @@ namespace Chowbro.Modules.Accounts.Commands.Handlers
                 await _userManager.AddToRoleAsync(user, userRole);
             }
 
-            var otp = OtpHelper.GenerateOtp();
+            var otp = OtpHelper.GenerateOtp(4);
             user.OtpCode = otp;
             user.OtpExpires = DateTime.UtcNow.AddMinutes(10);
             await _userManager.UpdateAsync(user);

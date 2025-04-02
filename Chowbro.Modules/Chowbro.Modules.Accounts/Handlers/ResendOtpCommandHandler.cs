@@ -31,14 +31,14 @@ namespace Chowbro.Modules.Accounts.Commands.Handlers
             if (user == null)
                 return ApiResponse<string>.Fail(null, "User not found.", HttpStatusCode.NotFound);
 
-            var otp = OtpHelper.GenerateOtp();
+            var otp = OtpHelper.GenerateOtp(4);
             user.OtpCode = otp;
             user.OtpExpires = DateTime.UtcNow.AddMinutes(10);
             await _userManager.UpdateAsync(user);
 
             // await _otpService.SendOtpAsync(request.ContactInfo, otp, request.IsEmail);
 
-            return ApiResponse<string>.Success("OTP sent successfully.", statusCode: HttpStatusCode.OK);
+            return ApiResponse<string>.Success("OTP resent successfully.", statusCode: HttpStatusCode.OK);
         }
     }
 }

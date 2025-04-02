@@ -4,7 +4,7 @@ using MediatR;
 
 namespace Chowbro.Modules.Accounts.Commands.Auth
 {
-    public class VerifyRegistrationOtpCommand : IRequest<ApiResponse<bool>>
+    public class VerifyRegistrationOtpCommand : IRequest<ApiResponse<AuthResponse>>
     {
         public string Email { get; }
         public string Otp { get; }

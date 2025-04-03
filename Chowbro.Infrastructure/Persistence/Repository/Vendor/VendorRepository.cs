@@ -28,6 +28,54 @@ namespace Chowbro.Infrastructure.Persistence.Repositories
                 .FirstOrDefaultAsync(v => v.Id == id, cancellationToken);
         }
 
+        public async Task<Vendor> GetVendorByIdAsync(Guid id, Func<IQueryable<Vendor>, IQueryable<Vendor>> include = null)
+        {
+            var query = _context.Vendors.AsQueryable();
+
+            if (include != null)
+            {
+                query = include(query);
+            }
+
+            return await query.FirstOrDefaultAsync(v => v.Id == id);
+        }
+
+        public async Task<Vendor> GetByUserIdAsync(string userId, Func<IQueryable<Vendor>, IQueryable<Vendor>> include = null)
+        {
+            var query = _context.Vendors.AsQueryable();
+
+            if (include != null)
+            {
+                query = include(query);
+            }
+
+            return await query.FirstOrDefaultAsync(v => v.UserId == userId);
+        }
+
+        public async Task<List<Branch>> GetBranchesByVendorIdAsync(Guid vendorId, Func<IQueryable<Branch>, IQueryable<Branch>> include = null)
+        {
+            var query = _context.Branches.Where(b => b.VendorId == vendorId);
+
+            if (include != null)
+            {
+                query = include(query);
+            }
+
+            return await query.ToListAsync();
+        }
+
+        public async Task<Branch> GetMainBranchByVendorIdAsync(Guid vendorId, Func<IQueryable<Branch>, IQueryable<Branch>> include = null)
+        {
+            var query = _context.Branches.Where(b => b.VendorId == vendorId && b.IsMainBranch);
+
+            if (include != null)
+            {
+                query = include(query);
+            }
+
+            return await query.FirstOrDefaultAsync();
+        }
+
         public async Task<IEnumerable<Vendor>> GetAllAsync(CancellationToken cancellationToken = default)
         {
             return await _context.Vendors

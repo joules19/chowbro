@@ -22,6 +22,10 @@ namespace Chowbro.Core.Interfaces.Vendors
         Task<IEnumerable<Product>> GetProductsAsync(Guid vendorId, CancellationToken cancellationToken = default);
         Task<IEnumerable<ProductCategory>> GetProductCategoriesAsync(Guid vendorId, CancellationToken cancellationToken = default);
         Task<IEnumerable<Vendor>> GetPendingApprovalVendorsAsync(CancellationToken cancellationToken = default);
+        Task<Vendor> GetVendorByIdAsync(Guid id, Func<IQueryable<Vendor>, IQueryable<Vendor>> include = null);
+        Task<Vendor> GetByUserIdAsync(string userId, Func<IQueryable<Vendor>, IQueryable<Vendor>> include = null);
+        Task<List<Branch>> GetBranchesByVendorIdAsync(Guid vendorId, Func<IQueryable<Branch>, IQueryable<Branch>> include = null);
+        Task<Branch> GetMainBranchByVendorIdAsync(Guid vendorId, Func<IQueryable<Branch>, IQueryable<Branch>> include = null);
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }

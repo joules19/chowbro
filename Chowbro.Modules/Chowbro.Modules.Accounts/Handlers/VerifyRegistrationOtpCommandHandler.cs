@@ -1,4 +1,13 @@
-﻿using Chowbro.Core.Entities;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Net;
+using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
+using Chowbro.Core.Entities;
+using Chowbro.Core.Events;
+using Chowbro.Core.Events.Customer;
+using Chowbro.Core.Events.Rider;
+using Chowbro.Core.Events.Vendor;
 using Chowbro.Core.Models;
 using Chowbro.Modules.Accounts.Commands.Auth;
 using Chowbro.Modules.Accounts.DTOs;
@@ -7,24 +16,23 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Net;
-using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
 
-namespace Chowbro.Modules.Accounts.Commands.Handlers
+namespace Chowbro.Modules.Accounts.Handlers
 {
     public class VerifyRegistrationOtpCommandHandler : IRequestHandler<VerifyRegistrationOtpCommand, ApiResponse<AuthResponse>>
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IConfiguration _configuration;
+        private readonly IMediator _mediator;
 
-        public VerifyRegistrationOtpCommandHandler(UserManager<ApplicationUser> userManager, IConfiguration configuration)
+        public VerifyRegistrationOtpCommandHandler(
+            UserManager<ApplicationUser> userManager, 
+            IConfiguration configuration,
+            IMediator mediator)
         {
             _userManager = userManager;
             _configuration = configuration;
-
+            _mediator = mediator;
         }
 
         public async Task<ApiResponse<AuthResponse>> Handle(VerifyRegistrationOtpCommand request, CancellationToken cancellationToken)
@@ -37,16 +45,67 @@ namespace Chowbro.Modules.Accounts.Commands.Handlers
             if (user.OtpCode == null || user.OtpExpires < DateTime.UtcNow || user.OtpCode != request.Otp)
                 return ApiResponse<AuthResponse>.Fail(null, "Invalid or expired OTP.", statusCode: HttpStatusCode.BadRequest);
 
-            user.EmailConfirmed = true;
+            user.PhoneNumberConfirmed = true;
             user.OtpCode = null;
             user.OtpExpires = null;
 
             await _userManager.UpdateAsync(user);
+            
+            // Get user roles
+            var roles = await _userManager.GetRolesAsync(user);
+            
+            // Create a base user registration event
+            var userEvent = new UserRegisteredEvent
+            {
+                UserId = user.Id,
+                Email = user.Email!,
+                PhoneNumber = user.PhoneNumber!,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Roles = roles
+            };
+            
+            // Publish the appropriate event based on the user's role
+            if (roles.Contains("Vendor"))
+            {
+                await _mediator.Publish(new VendorRegisteredEvent
+                {
+                    UserId = userEvent.UserId,
+                    Email = userEvent.Email!,
+                    PhoneNumber = userEvent.PhoneNumber!,
+                    FirstName = userEvent.FirstName,
+                    LastName = userEvent.LastName,
+                    Roles = userEvent.Roles
+                }, cancellationToken);
+            }
+            else if (roles.Contains("Customer"))
+            {
+                await _mediator.Publish(new CustomerRegisteredEvent
+                {
+                    UserId = userEvent.UserId,
+                    Email = userEvent.Email!,
+                    PhoneNumber = userEvent.PhoneNumber!,
+                    FirstName = userEvent.FirstName,
+                    LastName = userEvent.LastName,
+                    Roles = userEvent.Roles
+                }, cancellationToken);
+            }
+            else if (roles.Contains("Rider"))
+            {
+                await _mediator.Publish(new RiderRegisteredEvent
+                {
+                    UserId = userEvent.UserId,
+                    Email = userEvent.Email!,
+                    PhoneNumber = userEvent.PhoneNumber!,
+                    FirstName = userEvent.FirstName,
+                    LastName = userEvent.LastName,
+                    Roles = userEvent.Roles
+                }, cancellationToken);
+            }
 
             return await GenerateJwtToken(user);
-
-            //return ApiResponse<bool>.Success(true, "OTP verified successfully, registration completed.", statusCode: HttpStatusCode.OK);
         }
+        
         private async Task<ApiResponse<AuthResponse>> GenerateJwtToken(ApplicationUser user)
         {
             var jwtSettings = _configuration.GetSection("JwtSettings");

@@ -1,4 +1,5 @@
 using Chowbro.Core.Entities;
+using Chowbro.Core.Entities.Vendor;
 using static Chowbro.Core.Enums.Product;
 
 public class Product : BaseEntity

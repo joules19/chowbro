@@ -1,8 +1,8 @@
 ﻿using Chowbro.Core.Entities;
-using Chowbro.Core.Interfaces.Vendors;
+using Chowbro.Core.Interfaces.Vendor;
 using Chowbro.Core.Models;
 using Chowbro.Core.Models.Vendor;
-using Chowbro.Modules.Vendors.Queries.Vendor;
+using Chowbro.Modules.Vendors.Queries;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 

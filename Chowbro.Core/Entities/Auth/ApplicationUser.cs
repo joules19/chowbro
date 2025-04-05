@@ -7,7 +7,7 @@ public class ApplicationUser : IdentityUser
 {
     public required string FirstName { get; set; }
     public required string LastName { get; set; }
-    public string? RCNumber { get; set; } // Only for Vendors
+    public string? RCNumber { get; set; } 
     public string? ReferralCode { get; set; }
 
     private DateTime _dateOfBirth;
@@ -19,7 +19,7 @@ public class ApplicationUser : IdentityUser
 
     public string? State { get; set; }
     public string? City { get; set; }
-    public string? Country { get; set; }
+    public string? Country { get; set; } 
     public string? Address { get; set; }
     public string? OtpCode { get; set; }
 

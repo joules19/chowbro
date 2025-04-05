@@ -1,27 +1,17 @@
-using System.Reflection;
-using Chowbro.Core.Events.Vendor.Handlers;
-using Chowbro.Modules.Vendors.Profiles;
+using Chowbro.Core.Events.Rider.Handlers;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Chowbro.Modules.Vendors;
+namespace Chowbro.Modules.Riders;
 
-public static class VendorModule
+public static class RiderModule
 {
-    public static IServiceCollection AddVendorModule(this IServiceCollection services)
+    public static IServiceCollection AddRiderModule(this IServiceCollection services)
     {
-        
         services.AddMediatR(cfg => 
         {
-            cfg.RegisterServicesFromAssembly(typeof(VendorRegisteredEventHandler).Assembly);
+            cfg.RegisterServicesFromAssembly(typeof(RiderRegisteredEventHandler).Assembly);
         });
-        // services.AddMediatR(cfg =>
-        //     cfg.RegisterServicesFromAssembly(typeof(VendorModule).Assembly));
-        // services.AddMediatR(cfg =>
-        //     cfg.RegisterServicesFromAssembly(typeof(AddProductCommandHandler).Assembly));
-      
-        // Mapping Profiles
-        services.AddAutoMapper(typeof(ProductProfile));
-        services.AddAutoMapper(typeof(VendorProfile).Assembly);
+        
 
         return services;
     }

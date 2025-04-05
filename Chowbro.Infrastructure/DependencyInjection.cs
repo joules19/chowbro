@@ -1,12 +1,17 @@
 ﻿using Chowbro.Core.Interfaces.Auth;
+using Chowbro.Core.Interfaces.Customer;
 using Chowbro.Core.Interfaces.Location;
 using Chowbro.Core.Interfaces.Media;
 using Chowbro.Core.Interfaces.Notifications;
-using Chowbro.Core.Interfaces.Vendors;
+using Chowbro.Core.Interfaces.Rider;
+using Chowbro.Core.Interfaces.Vendor;
 using Chowbro.Core.Models.Settings;
 using Chowbro.Infrastructure.Persistence.Repositories;
 using Chowbro.Infrastructure.Persistence.Repositories.Location;
+using Chowbro.Infrastructure.Persistence.Repository.Customer;
+using Chowbro.Infrastructure.Persistence.Repository.Vendor;
 using Chowbro.Infrastructure.Services;
+using Chowbro.Infrastructure.Services.BackgroundServices;
 using Chowbro.Infrastructure.Settings;
 using CloudinaryDotNet;
 using Microsoft.Extensions.Configuration;
@@ -23,6 +28,9 @@ namespace Chowbro.Infrastructure
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IProductCategoryRepository, ProductCategoryRepository>();
             services.AddScoped<IVendorRepository, VendorRepository>();
+            services.AddScoped<IRiderRepository, RiderRepository>();
+            services.AddScoped<ICustomerRepository, CustomerRepository>();
+
             services.AddScoped<IStateRepository, StateRepository>();
             services.AddScoped<ILgaRepository, LgaRepository>();
 
@@ -34,7 +42,7 @@ namespace Chowbro.Infrastructure
             services.Configure<VendorApprovalOptions>(configuration.GetSection("VendorApproval"));
 
             // Register the background service
-            services.AddHostedService<VendorApprovalService>();
+            // services.AddHostedService<VendorApprovalService>();
 
             services.Configure<CloudinarySettings>(configuration.GetSection("CloudinarySettings"));
             services.AddSingleton(provider =>

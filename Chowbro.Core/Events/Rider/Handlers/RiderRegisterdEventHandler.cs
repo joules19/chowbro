@@ -1,8 +1,7 @@
-using Chowbro.Core.Entities.Rider;
 using Chowbro.Core.Interfaces.Rider;
 using MediatR;
 
-namespace Chowbro.Core.Events.Handlers
+namespace Chowbro.Core.Events.Rider.Handlers
 {
     public class RiderRegisteredEventHandler : INotificationHandler<RiderRegisteredEvent>
     {
@@ -15,7 +14,7 @@ namespace Chowbro.Core.Events.Handlers
         
         public async Task Handle(RiderRegisteredEvent notification, CancellationToken cancellationToken)
         {
-            var rider = new Rider
+            var rider = new Entities.Rider.Rider
             {
                 UserId = notification.UserId,
                 Email = notification.Email,
@@ -25,8 +24,8 @@ namespace Chowbro.Core.Events.Handlers
                 Status = Enums.Rider.RiderStatus.PendingVerification
             };
             
-            await _riderRepository.AddAsync(rider);
-            await _riderRepository.SaveChangesAsync();
+            await _riderRepository.AddAsync(rider, cancellationToken);
+            await _riderRepository.SaveChangesAsync(cancellationToken);
         }
     }
 }

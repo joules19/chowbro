@@ -1,4 +1,5 @@
 ﻿using Chowbro.Core.Entities;
+using Chowbro.Core.Entities.Vendor;
 
 public class ProductCategory : BaseEntity
 {

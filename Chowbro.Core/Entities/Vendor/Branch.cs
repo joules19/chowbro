@@ -1,5 +1,6 @@
 using Chowbro.Core.Entities;
 using Chowbro.Core.Entities.Location;
+using Chowbro.Core.Entities.Vendor;
 
 public class Branch : BaseEntity
 {

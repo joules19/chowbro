@@ -26,6 +26,8 @@
   <ItemGroup>
     <ProjectReference Include="..\Chowbro.Infrastructure\Chowbro.Infrastructure.csproj" />
     <ProjectReference Include="..\Chowbro.Modules\Chowbro.Modules.Accounts\Chowbro.Modules.Accounts.csproj" />
+    <ProjectReference Include="..\Chowbro.Modules\Chowbro.Modules.Customers\Chowbro.Modules.Customers.csproj" />
+    <ProjectReference Include="..\Chowbro.Modules\Chowbro.Modules.Riders\Chowbro.Modules.Riders.csproj" />
     <ProjectReference Include="..\Chowbro.Modules\Chowbro.Modules.Vendors\Chowbro.Modules.Vendors.csproj" />
   </ItemGroup>
 

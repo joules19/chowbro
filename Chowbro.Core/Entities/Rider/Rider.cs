@@ -1,5 +1,5 @@
-using Chowbro.Core.Entities;
-using static Chowbro.Core.Enums.Vendor;
+namespace Chowbro.Core.Entities.Rider;
+
 public class Rider : BaseEntity
 {
     public string FirstName { get; set; }

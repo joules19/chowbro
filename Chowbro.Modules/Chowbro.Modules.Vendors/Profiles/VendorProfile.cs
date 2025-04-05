@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Chowbro.Core.Entities.Vendor;
 using Chowbro.Core.Models.Vendor;
 
 namespace Chowbro.Modules.Vendors.Profiles

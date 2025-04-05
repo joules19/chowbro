@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
-using Chowbro.Core.Interfaces.Vendors;
+using Chowbro.Core.Entities.Vendor;
+using Chowbro.Core.Interfaces.Vendor;
 using Chowbro.Core.Models.Settings;
 using Chowbro.Core.Models.Vendor;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,7 +9,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using static Chowbro.Core.Enums.Vendor;
 
-namespace Chowbro.Infrastructure.Services
+namespace Chowbro.Infrastructure.Services.BackgroundServices
 {
     public class VendorApprovalService : BackgroundService
     {
@@ -47,7 +48,7 @@ namespace Chowbro.Infrastructure.Services
 
                             var vendorDto = mapper.Map<VendorDto>(vendor);
                             _logger.LogInformation("Approved vendor {VendorId} - {VendorName}",
-                                vendorDto.Id, vendorDto.Name);
+                                vendorDto.Id, vendorDto.BusinessName);
                         }
                     }
 

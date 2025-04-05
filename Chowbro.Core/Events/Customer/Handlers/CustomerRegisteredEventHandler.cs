@@ -1,8 +1,7 @@
-using Chowbro.Core.Entities.Customer;
 using Chowbro.Core.Interfaces.Customer;
 using MediatR;
 
-namespace Chowbro.Core.Events.Handlers
+namespace Chowbro.Core.Events.Customer.Handlers
 {
     public class CustomerRegisteredEventHandler : INotificationHandler<CustomerRegisteredEvent>
     {
@@ -15,7 +14,7 @@ namespace Chowbro.Core.Events.Handlers
         
         public async Task Handle(CustomerRegisteredEvent notification, CancellationToken cancellationToken)
         {
-            var customer = new Customer
+            var customer = new Entities.Customer.Customer
             {
                 UserId = notification.UserId,
                 Email = notification.Email,

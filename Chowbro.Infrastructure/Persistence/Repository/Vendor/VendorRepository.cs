@@ -1,14 +1,8 @@
-﻿using Chowbro.Core.Entities;
-using Chowbro.Core.Interfaces.Vendors;
+﻿using Chowbro.Core.Interfaces.Vendor;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using static Chowbro.Core.Enums.Vendor;
 
-namespace Chowbro.Infrastructure.Persistence.Repositories
+namespace Chowbro.Infrastructure.Persistence.Repository.Vendor
 {
     public class VendorRepository : IVendorRepository
     {
@@ -19,7 +13,7 @@ namespace Chowbro.Infrastructure.Persistence.Repositories
             _context = context;
         }
 
-        public async Task<Vendor> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+        public async Task<Core.Entities.Vendor.Vendor> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
             return await _context.Vendors
                 .Include(v => v.Branches)
@@ -28,7 +22,7 @@ namespace Chowbro.Infrastructure.Persistence.Repositories
                 .FirstOrDefaultAsync(v => v.Id == id, cancellationToken);
         }
 
-        public async Task<Vendor> GetVendorByIdAsync(Guid id, Func<IQueryable<Vendor>, IQueryable<Vendor>> include = null)
+        public async Task<Core.Entities.Vendor.Vendor> GetVendorByIdAsync(Guid id, Func<IQueryable<Core.Entities.Vendor.Vendor>, IQueryable<Core.Entities.Vendor.Vendor>> include = null)
         {
             var query = _context.Vendors.AsQueryable();
 
@@ -40,7 +34,7 @@ namespace Chowbro.Infrastructure.Persistence.Repositories
             return await query.FirstOrDefaultAsync(v => v.Id == id);
         }
 
-        public async Task<Vendor> GetByUserIdAsync(string userId, Func<IQueryable<Vendor>, IQueryable<Vendor>> include = null)
+        public async Task<Core.Entities.Vendor.Vendor> GetByUserIdAsync(string userId, Func<IQueryable<Core.Entities.Vendor.Vendor>, IQueryable<Core.Entities.Vendor.Vendor>> include = null)
         {
             var query = _context.Vendors.AsQueryable();
 
@@ -76,7 +70,7 @@ namespace Chowbro.Infrastructure.Persistence.Repositories
             return await query.FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<Vendor>> GetAllAsync(CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<Core.Entities.Vendor.Vendor>> GetAllAsync(CancellationToken cancellationToken = default)
         {
             return await _context.Vendors
                 .Include(v => v.Branches)
@@ -84,7 +78,7 @@ namespace Chowbro.Infrastructure.Persistence.Repositories
                 .ToListAsync(cancellationToken);
         }
 
-        public async Task<IEnumerable<Vendor>> GetByStatusAsync(VendorStatus status, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<Core.Entities.Vendor.Vendor>> GetByStatusAsync(VendorStatus status, CancellationToken cancellationToken = default)
         {
             return await _context.Vendors
                 .Where(v => v.Status == status)
@@ -93,19 +87,19 @@ namespace Chowbro.Infrastructure.Persistence.Repositories
                 .ToListAsync(cancellationToken);
         }
 
-        public async Task AddAsync(Vendor vendor, CancellationToken cancellationToken = default)
+        public async Task AddAsync(Core.Entities.Vendor.Vendor vendor, CancellationToken cancellationToken = default)
         {
             await _context.Vendors.AddAsync(vendor, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task UpdateAsync(Vendor vendor, CancellationToken cancellationToken = default)
+        public async Task UpdateAsync(Core.Entities.Vendor.Vendor vendor, CancellationToken cancellationToken = default)
         {
             _context.Vendors.Update(vendor);
             await _context.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task DeleteAsync(Vendor vendor, CancellationToken cancellationToken = default)
+        public async Task DeleteAsync(Core.Entities.Vendor.Vendor vendor, CancellationToken cancellationToken = default)
         {
             vendor.IsDeleted = true;
             vendor.DeletedAt = DateTime.UtcNow;
@@ -145,7 +139,7 @@ namespace Chowbro.Infrastructure.Persistence.Repositories
                 .ToListAsync(cancellationToken);
         }
 
-        public async Task<IEnumerable<Vendor>> GetPendingApprovalVendorsAsync(CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<Core.Entities.Vendor.Vendor>> GetPendingApprovalVendorsAsync(CancellationToken cancellationToken = default)
         {
             return await _context.Vendors
                 .Where(v => v.Status == VendorStatus.PendingApproval)
@@ -153,13 +147,6 @@ namespace Chowbro.Infrastructure.Persistence.Repositories
                 .Include(v => v.User)
                 .AsNoTracking()
                 .ToListAsync(cancellationToken);
-        }
-
-        public async Task<Vendor> GetByUserIdAsync(string userId, CancellationToken cancellationToken = default)
-        {
-            return await _context.Vendors
-                .Include(v => v.Branches)
-                .FirstOrDefaultAsync(v => v.UserId == userId, cancellationToken);
         }
 
         public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

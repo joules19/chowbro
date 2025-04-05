@@ -1,4 +1,5 @@
-﻿using Chowbro.Core.Entities;
+﻿using System.Net;
+using Chowbro.Core.Entities;
 using Chowbro.Core.Interfaces.Notifications;
 using Chowbro.Core.Models;
 using Chowbro.Infrastructure.Auth;
@@ -8,9 +9,8 @@ using Chowbro.Modules.Accounts.DTOs;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System.Net;
 
-namespace Chowbro.Modules.Accounts.Commands.Handlers
+namespace Chowbro.Modules.Accounts.Handlers
 {
     public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ApiResponse<OtpResponse>>
     {
@@ -67,13 +67,9 @@ namespace Chowbro.Modules.Accounts.Commands.Handlers
                 PhoneNumber = model.PhoneNumber,
                 FirstName = model.FirstName,
                 LastName = model.LastName,
-                RCNumber = model.RCNumber,
-                ReferralCode = model.ReferralCode,
+                ReferralCode = model.ReferralCode ?? string.Empty,
                 DateOfBirth = model.DateOfBirth,
-                State = model.State,
-                City = model.City,
-                Country = model.Country,
-                Address = model.Address
+                Country = "NIGERIA",
             };
 
             user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, generatedPassword);

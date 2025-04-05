@@ -1,8 +1,8 @@
-﻿namespace Chowbro.Core.Interfaces.Vendors
+﻿namespace Chowbro.Core.Interfaces.Vendor
 {
     public interface IVendorProvider
     {
-        Task<Vendor?> GetVendorByUserIdAsync(string userId);
+        Task<Entities.Vendor.Vendor?> GetVendorByUserIdAsync(string userId);
         Task<Guid?> GetVendorIdForUserAsync(string userId);
     }
 }

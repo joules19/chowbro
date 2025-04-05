@@ -30,7 +30,7 @@ namespace Chowbro.Modules.Accounts.Commands.Handlers
             var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Email == request.ContactInfo || u.PhoneNumber == request.ContactInfo);
 
             if (user == null)
-                return ApiResponse<OtpResponse>.Fail(null, "User not found.", HttpStatusCode.NotFound);
+                return ApiResponse<OtpResponse>.Fail(null, "We couldn't find an account with that phone number.", HttpStatusCode.NotFound);
 
             if (!user.PhoneNumberConfirmed)
             {

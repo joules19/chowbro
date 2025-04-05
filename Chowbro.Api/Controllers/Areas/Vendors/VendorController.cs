@@ -1,12 +1,12 @@
 using Chowbro.Modules.Vendors.Commands.Vendor;
 using Chowbro.Modules.Vendors.DTOs.Vendor;
-using Chowbro.Modules.Vendors.Queries.Vendor;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using Chowbro.Modules.Vendors.Queries;
 
 namespace Chowbro.Api.Controllers.Areas.Vendors
 {

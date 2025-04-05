@@ -2,7 +2,7 @@
 using Chowbro.Core.Models.Vendor;
 using MediatR;
 
-namespace Chowbro.Modules.Vendors.Queries.Vendor
+namespace Chowbro.Modules.Vendors.Queries
 {
     public class GetVendorByIdQuery : IRequest<ApiResponse<VendorDto>>
     {

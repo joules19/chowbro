@@ -1,9 +1,8 @@
 
-namespace Chowbro.Core.Events.Customer
+namespace Chowbro.Core.Events.Rider
 {
-    public class CustomerRegisteredEvent : UserRegisteredEvent
+    public class RiderRegisteredEvent : UserRegisteredEvent
     {
-        public string BusinessName { get; set; }
 
     }
 

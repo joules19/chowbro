@@ -1,11 +1,11 @@
 ﻿using Chowbro.Core.Entities;
-using Chowbro.Core.Interfaces.Vendors;
 using Chowbro.Core.Models;
 using Chowbro.Core.Models.Vendor;
-using Chowbro.Modules.Vendors.Queries.Vendor;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
+using Chowbro.Core.Interfaces.Vendor;
+using Chowbro.Modules.Vendors.Queries;
 
 namespace Chowbro.Modules.Vendors.Handlers.Vendor
 {
@@ -32,7 +32,7 @@ namespace Chowbro.Modules.Vendors.Handlers.Vendor
             var vendorDto = new VendorDto
             {
                 Id = vendor.Id,
-                Name = vendor.Name,
+                BusinessName = vendor.BusinessName,
                 Description = vendor.Description,
                 Status = vendor.Status.ToString(),
                 LogoUrl = vendor.LogoUrl,

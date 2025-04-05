@@ -14,6 +14,10 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using System.Threading.RateLimiting;
+using Chowbro.Infrastructure.Persistence;
+using Chowbro.Modules.Customers;
+using Chowbro.Modules.Riders;
+using Chowbro.Modules.Vendors;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -87,7 +91,9 @@ builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("Emai
 builder.Services.AddInfrastructure(builder.Configuration)
                .AddCustomSwagger()
                .AddAccountsModule()
-               .AddVendorModule();
+               .AddCustomerModule()
+               .AddVendorModule()
+               .AddRiderModule();
 
 // JWT Authentication Configuration
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");

@@ -1,10 +1,10 @@
-﻿using Chowbro.Core.Interfaces.Vendors;
-using Chowbro.Core.Models;
+﻿using Chowbro.Core.Models;
 using Chowbro.Core.Models.Vendor;
-using Chowbro.Modules.Vendors.Queries.Vendor;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
+using Chowbro.Core.Interfaces.Vendor;
+using Chowbro.Modules.Vendors.Queries;
 
 namespace Chowbro.Modules.Vendors.Handlers.Vendor
 {

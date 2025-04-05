@@ -1,10 +1,12 @@
 using Chowbro.Core.Entities;
+using Chowbro.Core.Entities.Customer;
 using Chowbro.Core.Entities.Location;
-using Microsoft.AspNetCore.Identity;
+using Chowbro.Core.Entities.Rider;
+using Chowbro.Core.Entities.Vendor;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace Chowbro.Infrastructure
+namespace Chowbro.Infrastructure.Persistence
 {
     public class AppDbContext : IdentityDbContext<ApplicationUser>
     {
@@ -12,6 +14,9 @@ namespace Chowbro.Infrastructure
 
         // Auth
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+        
+        // Customers
+        public DbSet<Customer> Customers { get; set; }
 
         // Vendors
         public DbSet<Vendor> Vendors { get; set; }
@@ -27,6 +32,9 @@ namespace Chowbro.Infrastructure
         // Locations
         public DbSet<State> States { get; set; }
         public DbSet<Lga> Lgas { get; set; }
+        
+        // Riders
+        public DbSet<Rider> Riders { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

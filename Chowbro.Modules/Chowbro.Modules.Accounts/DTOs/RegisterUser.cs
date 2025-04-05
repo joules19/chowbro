@@ -17,8 +17,6 @@ namespace Chowbro.Modules.Accounts.DTOs
         [Required, Phone]
         public string PhoneNumber { get; set; }
 
-        public string? RCNumber { get; set; } 
-
         public string? ReferralCode { get; set; } 
 
         [Required]

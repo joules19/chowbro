@@ -1,4 +1,13 @@
-﻿using Chowbro.Core.Entities;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Net;
+using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
+using Chowbro.Core.Entities;
+using Chowbro.Core.Events;
+using Chowbro.Core.Events.Customer;
+using Chowbro.Core.Events.Rider;
+using Chowbro.Core.Events.Vendor;
 using Chowbro.Core.Models;
 using Chowbro.Modules.Accounts.Commands.Auth;
 using Chowbro.Modules.Accounts.DTOs;
@@ -7,25 +16,23 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Net;
-using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
 
-namespace Chowbro.Modules.Accounts.Commands.Handlers
+namespace Chowbro.Modules.Accounts.Handlers
 {
     public class VerifyOtpCommandHandler : IRequestHandler<VerifyOtpCommand, ApiResponse<AuthResponse>>
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IConfiguration _configuration;
+        private readonly IMediator _mediator;
 
         public VerifyOtpCommandHandler(
             UserManager<ApplicationUser> userManager,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            IMediator mediator)
         {
             _userManager = userManager;
             _configuration = configuration;
+            _mediator = mediator;
         }
 
         public async Task<ApiResponse<AuthResponse>> Handle(VerifyOtpCommand request, CancellationToken cancellationToken)
@@ -45,9 +52,63 @@ namespace Chowbro.Modules.Accounts.Commands.Handlers
 
             user.OtpCode = null;
             user.OtpExpires = null;
+            
+            // If user did not finish registration
             if (!user.PhoneNumberConfirmed)
             {
                 user.PhoneNumberConfirmed = true;
+                
+                 // Get user roles
+                var roles = await _userManager.GetRolesAsync(user);
+                
+                // Create a base user registration event
+                var userEvent = new UserRegisteredEvent
+                {
+                    UserId = user.Id,
+                    Email = user.Email!,
+                    PhoneNumber = user.PhoneNumber!,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Roles = roles
+                };
+                
+                // Publish the appropriate event based on the user's role
+                if (roles.Contains("Vendor"))
+                {
+                    await _mediator.Publish(new VendorRegisteredEvent
+                    {
+                        UserId = userEvent.UserId,
+                        Email = userEvent.Email!,
+                        PhoneNumber = userEvent.PhoneNumber!,
+                        FirstName = userEvent.FirstName,
+                        LastName = userEvent.LastName,
+                        Roles = userEvent.Roles
+                    }, cancellationToken);
+                }
+                else if (roles.Contains("Customer"))
+                {
+                    await _mediator.Publish(new CustomerRegisteredEvent
+                    {
+                        UserId = userEvent.UserId,
+                        Email = userEvent.Email!,
+                        PhoneNumber = userEvent.PhoneNumber!,
+                        FirstName = userEvent.FirstName,
+                        LastName = userEvent.LastName,
+                        Roles = userEvent.Roles
+                    }, cancellationToken);
+                }
+                else if (roles.Contains("Rider"))
+                {
+                    await _mediator.Publish(new RiderRegisteredEvent
+                    {
+                        UserId = userEvent.UserId,
+                        Email = userEvent.Email!,
+                        PhoneNumber = userEvent.PhoneNumber!,
+                        FirstName = userEvent.FirstName,
+                        LastName = userEvent.LastName,
+                        Roles = userEvent.Roles
+                    }, cancellationToken);
+                }
             }
             await _userManager.UpdateAsync(user);
 

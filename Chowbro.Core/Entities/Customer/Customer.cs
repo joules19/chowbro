@@ -1,4 +1,4 @@
-namespace Chowbro.Core.Entities.Vendor;
+namespace Chowbro.Core.Entities.Customer;
 
 public class Customer : BaseEntity
 {

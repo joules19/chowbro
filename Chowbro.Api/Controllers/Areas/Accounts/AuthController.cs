@@ -9,8 +9,8 @@ namespace Chowbro.Api.Controllers.Areas.Accounts
 {
     [Area("Accounts")]
     [Route("api/accounts/[controller]")]
-    [EnableRateLimiting("strict-auth")] // Applies to all actions
-    //[DisableRateLimiting] // If you want to exempt specific endpoints
+    [EnableRateLimiting("strict-auth")] 
+    //[DisableRateLimiting] 
     [ApiController]
     public class AuthController : ControllerBase
     {

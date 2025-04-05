@@ -1,6 +1,6 @@
 namespace Chowbro.Core.Events;
 
-public class VendorRegisteredEvent
+public class UserRegisteredEvent
 {
     
 }

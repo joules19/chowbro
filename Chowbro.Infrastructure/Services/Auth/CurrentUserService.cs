@@ -1,10 +1,10 @@
-using Chowbro.Core.Interfaces.Auth;
 using Chowbro.Core.Middlewares;
 using Microsoft.AspNetCore.Http;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Chowbro.Core.Entities.Vendor;
-using Chowbro.Core.Interfaces.Vendor;
+using Chowbro.Core.Services.Interfaces.Auth;
+using Chowbro.Core.Services.Interfaces.Vendor;
 
 namespace Chowbro.Infrastructure.Services
 {

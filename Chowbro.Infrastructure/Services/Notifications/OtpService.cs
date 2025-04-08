@@ -1,4 +1,4 @@
-using Chowbro.Core.Interfaces.Notifications;
+using Chowbro.Core.Services.Interfaces.Notifications;
 using Microsoft.Extensions.Configuration;
 using Twilio;
 using Twilio.Rest.Api.V2010.Account;

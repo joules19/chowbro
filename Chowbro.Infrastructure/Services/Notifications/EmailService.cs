@@ -1,3 +1,4 @@
+using Chowbro.Core.Services.Interfaces.Notifications;
 using Microsoft.Extensions.Options;
 using MailKit.Net.Smtp;
 using MimeKit;

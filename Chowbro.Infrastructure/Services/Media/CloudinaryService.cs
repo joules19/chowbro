@@ -1,4 +1,4 @@
-using Chowbro.Core.Interfaces.Media;
+using Chowbro.Core.Services.Interfaces.Media;
 using Chowbro.Infrastructure.Settings;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;

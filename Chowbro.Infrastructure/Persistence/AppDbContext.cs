@@ -21,6 +21,8 @@ namespace Chowbro.Infrastructure.Persistence
         // Vendors
         public DbSet<Vendor> Vendors { get; set; }
         public DbSet<Branch> Branches { get; set; }
+        public DbSet<BusinessType> BusinessTypes { get; set; }
+
 
         // Products
         public DbSet<Product> Products { get; set; }
@@ -104,6 +106,14 @@ namespace Chowbro.Infrastructure.Persistence
 
             builder.Entity<Lga>()
                 .HasIndex(l => l.StateId);
+            
+            builder.Entity<BusinessType>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Name).IsRequired().HasMaxLength(100);
+                entity.Property(e => e.Description).HasMaxLength(500);
+                entity.Property(e => e.IsActive).HasDefaultValue(true);
+            });
 
             // Configure soft delete filter
             builder.Entity<Vendor>().HasQueryFilter(v => !v.IsDeleted);

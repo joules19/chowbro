@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Data\Seeders\" />
     <Folder Include="Services\" />
   </ItemGroup>
 
@@ -18,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Chowbro.Core\Chowbro.Core.csproj" />
+    <ProjectReference Include="..\..\Chowbro.Infrastructure\Chowbro.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

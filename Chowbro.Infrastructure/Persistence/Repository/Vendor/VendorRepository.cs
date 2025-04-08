@@ -34,7 +34,7 @@ namespace Chowbro.Infrastructure.Persistence.Repository.Vendor
             return await query.FirstOrDefaultAsync(v => v.Id == id);
         }
 
-        public async Task<Core.Entities.Vendor.Vendor> GetByUserIdAsync(string userId, Func<IQueryable<Core.Entities.Vendor.Vendor>, IQueryable<Core.Entities.Vendor.Vendor>> include = null)
+        public async Task<Core.Entities.Vendor.Vendor?> GetByUserIdAsync(string userId, Func<IQueryable<Core.Entities.Vendor.Vendor>, IQueryable<Core.Entities.Vendor.Vendor>> include = null)
         {
             var query = _context.Vendors.AsQueryable();
 

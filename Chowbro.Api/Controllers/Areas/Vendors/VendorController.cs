@@ -46,6 +46,19 @@ namespace Chowbro.Api.Controllers.Areas.Vendors
             var result = await _mediator.Send(query);
             return StatusCode((int)result.StatusCode, result);
         }
+        
+        [HttpPut("update-vendor")]
+        public async Task<IActionResult> UpdateVendor([FromBody] UpdateVendorRequest request)
+        {
+            var command = new UpdateVendorCommand(
+                request.BusinessName,
+                request.FirstName,
+                request.LastName,
+                request.Description);
+    
+            var result = await _mediator.Send(command);
+            return StatusCode((int)result.StatusCode, result);
+        }
 
         [HttpGet("{vendorId}/branches")]
         public async Task<IActionResult> GetVendorBranches(Guid vendorId)

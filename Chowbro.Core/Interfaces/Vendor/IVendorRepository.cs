@@ -5,7 +5,7 @@ namespace Chowbro.Core.Interfaces.Vendor
     public interface IVendorRepository
     {
         Task<Entities.Vendor.Vendor> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
-        Task<Entities.Vendor.Vendor> GetByUserIdAsync(string userId, Func<IQueryable<Entities.Vendor.Vendor>, IQueryable<Entities.Vendor.Vendor>> include = null);
+        Task<Entities.Vendor.Vendor?> GetByUserIdAsync(string userId, Func<IQueryable<Entities.Vendor.Vendor>, IQueryable<Entities.Vendor.Vendor>> include = null);
         Task<IEnumerable<Entities.Vendor.Vendor>> GetAllAsync(CancellationToken cancellationToken = default);
         Task<IEnumerable<Entities.Vendor.Vendor>> GetByStatusAsync(VendorStatus status, CancellationToken cancellationToken = default);
         Task AddAsync(Entities.Vendor.Vendor vendor, CancellationToken cancellationToken = default);

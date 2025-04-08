@@ -16,8 +16,6 @@ public static class VendorModule
         });
         services.AddMediatR(cfg =>
             cfg.RegisterServicesFromAssembly(typeof(VendorModule).Assembly));
-        // services.AddMediatR(cfg =>
-        //     cfg.RegisterServicesFromAssembly(typeof(AddProductCommandHandler).Assembly));
       
         // Mapping Profiles
         services.AddAutoMapper(typeof(ProductProfile));

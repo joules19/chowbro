@@ -36,9 +36,8 @@ namespace Chowbro.Infrastructure.Services
             if (user == null)
                 return null;
 
-            var vendor = await _vendorRepository.GetByIdAsync(Guid.Parse(userId));
-            if (vendor == null) return null;
-            return vendor.Id;
+            var vendor = await _vendorRepository.GetByUserIdAsync(userId);
+            return vendor?.Id;
         }
     }
 }

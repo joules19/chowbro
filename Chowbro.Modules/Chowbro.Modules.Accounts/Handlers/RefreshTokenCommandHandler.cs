@@ -1,4 +1,9 @@
-﻿using Chowbro.Core.Entities;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Net;
+using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
+using Chowbro.Core.Entities;
 using Chowbro.Core.Models;
 using Chowbro.Modules.Accounts.Commands.Auth;
 using Chowbro.Modules.Accounts.DTOs;
@@ -7,13 +12,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Net;
-using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
 
-namespace Chowbro.Modules.Accounts.Commands.Handlers
+namespace Chowbro.Modules.Accounts.Handlers
 {
     public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, ApiResponse<AuthResponse>>
     {
@@ -38,9 +38,12 @@ namespace Chowbro.Modules.Accounts.Commands.Handlers
             return await GenerateJwtToken(user);
         }
 
-        private async Task<ApiResponse<AuthResponse>> GenerateJwtToken(ApplicationUser user)
+      public async Task<ApiResponse<AuthResponse>> GenerateJwtToken(ApplicationUser user)
         {
-            var key = Encoding.UTF8.GetBytes(_configuration["JwtSettings:Secret"]!);
+            var jwtSettings = _configuration.GetSection("JwtSettings");
+            var key = Encoding.UTF8.GetBytes(jwtSettings["Secret"]!);
+            var expiresInMinutes = _configuration.GetValue<int>("JwtSettings:ExpiresInMinutes");
+
             var roles = await _userManager.GetRolesAsync(user);
 
             var claims = new[]
@@ -49,14 +52,19 @@ namespace Chowbro.Modules.Accounts.Commands.Handlers
                 new Claim(JwtRegisteredClaimNames.Email, user.Email!),
                 new Claim(JwtRegisteredClaimNames.UniqueName, user.PhoneNumber!),
                 new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}"),
-                new Claim(ClaimTypes.Role, string.Join(",", roles))
+                new Claim(ClaimTypes.Role, string.Join(",", roles)),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddMinutes(30),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)
+                Expires = DateTime.UtcNow.AddMinutes(expiresInMinutes),
+                Issuer = jwtSettings["Issuer"],
+                Audience = jwtSettings["Audience"],
+                SigningCredentials = new SigningCredentials(
+                    new SymmetricSecurityKey(key),
+                    SecurityAlgorithms.HmacSha256)
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();

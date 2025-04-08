@@ -27,7 +27,8 @@ namespace Chowbro.Infrastructure
             // Database Repositories
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IProductCategoryRepository, ProductCategoryRepository>();
-            services.AddScoped<IVendorRepository, VendorRepository>();
+            services.AddScoped<IVendorRepository, VendorRepository>(); 
+            services.AddScoped<IBusinessTypeRepository, BusinessTypeRepository>();
             services.AddScoped<IRiderRepository, RiderRepository>();
             services.AddScoped<ICustomerRepository, CustomerRepository>();
 

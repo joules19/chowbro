@@ -1,16 +1,15 @@
-﻿using Chowbro.Core.Entities;
+﻿using System.Net;
+using Chowbro.Core.Entities;
 using Chowbro.Core.Interfaces.Notifications;
 using Chowbro.Core.Models;
 using Chowbro.Infrastructure.Helpers;
-using Chowbro.Infrastructure.Services;
 using Chowbro.Modules.Accounts.Commands.Auth;
 using Chowbro.Modules.Accounts.DTOs;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System.Net;
 
-namespace Chowbro.Modules.Accounts.Commands.Handlers
+namespace Chowbro.Modules.Accounts.Handlers
 {
     public class LoginCommandHandler : IRequestHandler<LoginCommand, ApiResponse<OtpResponse>>
     {

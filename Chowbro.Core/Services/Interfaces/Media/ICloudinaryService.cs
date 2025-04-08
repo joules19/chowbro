@@ -1,7 +1,7 @@
 using CloudinaryDotNet.Actions;
 using Microsoft.AspNetCore.Http;
 
-namespace Chowbro.Core.Interfaces.Media
+namespace Chowbro.Core.Services.Interfaces.Media
 {
     public interface ICloudinaryService
     {

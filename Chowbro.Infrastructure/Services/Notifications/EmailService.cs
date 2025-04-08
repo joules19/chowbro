@@ -1,10 +1,10 @@
 using Chowbro.Core.Services.Interfaces.Notifications;
-using Microsoft.Extensions.Options;
-using MailKit.Net.Smtp;
-using MimeKit;
 using Chowbro.Infrastructure.Settings;
+using MailKit.Net.Smtp;
+using Microsoft.Extensions.Options;
+using MimeKit;
 
-namespace Chowbro.Infrastructure.Services
+namespace Chowbro.Infrastructure.Services.Notifications
 {
     public class EmailService : IEmailService
     {

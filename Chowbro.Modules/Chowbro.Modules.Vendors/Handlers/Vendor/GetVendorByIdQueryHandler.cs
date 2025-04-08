@@ -4,7 +4,7 @@ using Chowbro.Core.Models.Vendor;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
-using Chowbro.Core.Interfaces.Vendor;
+using Chowbro.Core.Repository.Interfaces.Vendor;
 using Chowbro.Modules.Vendors.Queries;
 
 namespace Chowbro.Modules.Vendors.Handlers.Vendor

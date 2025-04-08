@@ -1,5 +1,4 @@
-
-using Chowbro.Core.Entities;
+namespace Chowbro.Core.Entities.Product;
 
 public class ProductImage : BaseEntity
 {

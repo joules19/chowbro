@@ -32,5 +32,9 @@ namespace Chowbro.Infrastructure.Persistence.Repository.Auth
             string searchTerm, 
             int pageNumber, 
             int pageSize);
+
+        Task<int> GetLoginCountToday(string deviceId);
+        Task FlagForReview(string deviceId);
+        Task RecordLoginAttempt(string deviceId, string ipAddress);
     }
 }

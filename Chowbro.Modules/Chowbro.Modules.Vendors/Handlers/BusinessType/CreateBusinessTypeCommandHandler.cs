@@ -1,6 +1,6 @@
 using System.Net;
-using Chowbro.Core.Interfaces.Vendor;
 using Chowbro.Core.Models;
+using Chowbro.Core.Repository.Interfaces.Vendor;
 using Chowbro.Modules.Vendors.Commands.BusinessType;
 using MediatR;
 using Microsoft.Extensions.Logging;

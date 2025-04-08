@@ -1,5 +1,5 @@
 ﻿using Chowbro.Core.Entities.Location;
-using Chowbro.Core.Interfaces.Location;
+using Chowbro.Core.Repository.Interfaces.Location;
 using Microsoft.EntityFrameworkCore;  // This provides Include() and ToListAsync()
 
 namespace Chowbro.Infrastructure.Persistence.Repositories.Location

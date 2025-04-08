@@ -1,6 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Chowbro.Core.Entities.Product;
+using Chowbro.Core.Repository.Interfaces.Product;
+using Microsoft.EntityFrameworkCore;
 
-namespace Chowbro.Infrastructure.Persistence.Repositories
+namespace Chowbro.Infrastructure.Persistence.Repository.Product
 {
     public class ProductRepository : IProductRepository
     {
@@ -11,7 +13,7 @@ namespace Chowbro.Infrastructure.Persistence.Repositories
             _context = context;
         }
 
-        public async Task<Product> GetByIdAsync(Guid id)
+        public async Task<Core.Entities.Product.Product> GetByIdAsync(Guid id)
         {
             return await _context.Products
                 .Include(p => p.Images)
@@ -23,7 +25,7 @@ namespace Chowbro.Infrastructure.Persistence.Repositories
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
 
-        public async Task<IEnumerable<Product>> GetByVendorAsync(Guid vendorId)
+        public async Task<IEnumerable<Core.Entities.Product.Product>> GetByVendorAsync(Guid vendorId)
         {
             return await _context.Products
                 .Include(p => p.Images)
@@ -34,19 +36,19 @@ namespace Chowbro.Infrastructure.Persistence.Repositories
                 .ToListAsync();
         }
 
-        public async Task AddAsync(Product product)
+        public async Task AddAsync(Core.Entities.Product.Product product)
         {
             await _context.Products.AddAsync(product);
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateAsync(Product product)
+        public async Task UpdateAsync(Core.Entities.Product.Product product)
         {
             _context.Products.Update(product);
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(Product product)
+        public async Task DeleteAsync(Core.Entities.Product.Product product)
         {
             product.IsDeleted = true;
             product.DeletedAt = DateTime.UtcNow;

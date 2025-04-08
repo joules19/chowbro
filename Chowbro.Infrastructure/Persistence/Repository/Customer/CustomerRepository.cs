@@ -1,4 +1,4 @@
-using Chowbro.Core.Interfaces.Customer;
+using Chowbro.Core.Repository.Interfaces.Customer;
 using Microsoft.EntityFrameworkCore;
 
 namespace Chowbro.Infrastructure.Persistence.Repository.Customer

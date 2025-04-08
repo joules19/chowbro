@@ -26,7 +26,7 @@ public class Vendor : BaseEntity
     public VendorStatus Status { get; set; } = VendorStatus.PendingApproval;
 
     public ICollection<Branch> Branches { get; set; } = new List<Branch>();
-    public ICollection<Product> Products { get; set; } = new List<Product>();
+    public ICollection<Product.Product> Products { get; set; } = new List<Product.Product>();
     public ICollection<ProductCategory> ProductCategories { get; set; } = new List<ProductCategory>();
 
 }

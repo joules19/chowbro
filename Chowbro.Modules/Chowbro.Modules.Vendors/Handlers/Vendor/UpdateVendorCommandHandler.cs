@@ -1,14 +1,12 @@
-using Chowbro.Core.Entities.Vendor;
 using Chowbro.Core.Events.Vendor;
-using Chowbro.Core.Interfaces.Vendor;
-using Chowbro.Core.Interfaces.Media;
-using Chowbro.Core.Interfaces.Auth;
 using Chowbro.Core.Models;
 using Chowbro.Modules.Vendors.Commands.Vendor;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using System.Net;
-using Microsoft.AspNetCore.Http;
+using Chowbro.Core.Repository.Interfaces.Vendor;
+using Chowbro.Core.Services.Interfaces.Auth;
+using Chowbro.Core.Services.Interfaces.Media;
 
 namespace Chowbro.Modules.Vendors.Handlers.Vendor
 {

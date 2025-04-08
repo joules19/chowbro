@@ -1,4 +1,4 @@
-namespace Chowbro.Core.Interfaces.Rider
+namespace Chowbro.Core.Repository.Interfaces.Rider
 {
     public interface IRiderRepository
     {

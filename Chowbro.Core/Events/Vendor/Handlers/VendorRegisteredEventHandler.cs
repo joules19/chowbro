@@ -1,4 +1,4 @@
-using Chowbro.Core.Interfaces.Vendor;
+using Chowbro.Core.Repository.Interfaces.Vendor;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using static Chowbro.Core.Enums.Vendor;

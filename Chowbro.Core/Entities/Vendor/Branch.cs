@@ -1,5 +1,6 @@
 using Chowbro.Core.Entities;
 using Chowbro.Core.Entities.Location;
+using Chowbro.Core.Entities.Product;
 using Chowbro.Core.Entities.Vendor;
 
 public class Branch : BaseEntity
@@ -17,7 +18,7 @@ public class Branch : BaseEntity
     public Lga Lga { get; set; }
 
     public string? City { get; set; }
-    public string? Country { get; set; } = "Nigeria"; 
+    public string? Country { get; set; } = "Nigeria";
     public string? PostalCode { get; set; }
 
     public double? Latitude { get; set; }

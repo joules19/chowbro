@@ -1,6 +1,6 @@
 ﻿using Chowbro.Core.Entities.Location;
 
-namespace Chowbro.Core.Interfaces.Location
+namespace Chowbro.Core.Repository.Interfaces.Location
 {
     public interface IStateRepository
     {

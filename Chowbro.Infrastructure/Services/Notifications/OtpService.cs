@@ -1,10 +1,9 @@
 using Chowbro.Core.Services.Interfaces.Notifications;
 using Microsoft.Extensions.Configuration;
-using Twilio;
 using Twilio.Rest.Api.V2010.Account;
 using Twilio.Types;
 
-namespace Chowbro.Infrastructure.Services
+namespace Chowbro.Infrastructure.Services.Notifications
 {
 
     public class OtpService : IOtpService

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Chowbro.Core.Repository.Interfaces.Product;
+using Microsoft.EntityFrameworkCore;
 
 namespace Chowbro.Infrastructure.Persistence.Repositories
 {

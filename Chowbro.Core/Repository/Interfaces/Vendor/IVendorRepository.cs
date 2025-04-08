@@ -1,6 +1,6 @@
 ﻿using static Chowbro.Core.Enums.Vendor;
 
-namespace Chowbro.Core.Interfaces.Vendor
+namespace Chowbro.Core.Repository.Interfaces.Vendor
 {
     public interface IVendorRepository
     {
@@ -13,7 +13,7 @@ namespace Chowbro.Core.Interfaces.Vendor
         Task DeleteAsync(Entities.Vendor.Vendor vendor, CancellationToken cancellationToken = default);
         Task<bool> ExistsAsync(Guid id, CancellationToken cancellationToken = default);
         Task<IEnumerable<Branch>> GetBranchesAsync(Guid vendorId, CancellationToken cancellationToken = default);
-        Task<IEnumerable<Product>> GetProductsAsync(Guid vendorId, CancellationToken cancellationToken = default);
+        Task<IEnumerable<Entities.Product.Product>> GetProductsAsync(Guid vendorId, CancellationToken cancellationToken = default);
         Task<IEnumerable<ProductCategory>> GetProductCategoriesAsync(Guid vendorId, CancellationToken cancellationToken = default);
         Task<IEnumerable<Entities.Vendor.Vendor>> GetPendingApprovalVendorsAsync(CancellationToken cancellationToken = default);
         Task<Entities.Vendor.Vendor> GetVendorByIdAsync(Guid id, Func<IQueryable<Entities.Vendor.Vendor>, IQueryable<Entities.Vendor.Vendor>> include = null);

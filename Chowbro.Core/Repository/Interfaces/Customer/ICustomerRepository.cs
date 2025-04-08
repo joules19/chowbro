@@ -1,4 +1,4 @@
-namespace Chowbro.Core.Interfaces.Customer
+namespace Chowbro.Core.Repository.Interfaces.Customer
 {
     public interface ICustomerRepository
     {

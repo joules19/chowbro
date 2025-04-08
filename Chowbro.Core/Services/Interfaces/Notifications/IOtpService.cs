@@ -1,4 +1,4 @@
-﻿namespace Chowbro.Core.Interfaces.Notifications
+﻿namespace Chowbro.Core.Services.Interfaces.Notifications
 {
     public interface IOtpService
     {

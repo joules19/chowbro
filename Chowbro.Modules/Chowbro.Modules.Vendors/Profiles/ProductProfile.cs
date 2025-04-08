@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Chowbro.Core.Entities.Product;
 using Chowbro.Modules.Vendors.Commands.Product;
 using static Chowbro.Modules.Vendors.DTOs.Product.ProductModel;
 

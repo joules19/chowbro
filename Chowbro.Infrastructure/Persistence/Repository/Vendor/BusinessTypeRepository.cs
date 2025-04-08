@@ -1,5 +1,5 @@
 using Chowbro.Core.Entities.Vendor;
-using Chowbro.Core.Interfaces.Vendor;
+using Chowbro.Core.Repository.Interfaces.Vendor;
 using Microsoft.EntityFrameworkCore;
 
 namespace Chowbro.Infrastructure.Persistence.Repository.Vendor;

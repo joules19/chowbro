@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using Chowbro.Core.Entities;
-using Chowbro.Core.Interfaces.Notifications;
 using Chowbro.Core.Models;
+using Chowbro.Core.Services.Interfaces.Notifications;
 using Chowbro.Infrastructure.Helpers;
 using Chowbro.Modules.Accounts.Commands.Auth;
 using Chowbro.Modules.Accounts.DTOs;

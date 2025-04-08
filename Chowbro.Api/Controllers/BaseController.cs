@@ -1,11 +1,17 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using Chowbro.Core.Services.Interfaces.Auth;
 
 namespace Chowbro.Api.Controllers
 {
     [ApiController]
     public abstract class BaseController : ControllerBase
     {
+   
+
+        // Inject dependencies through constructor
+        public BaseController() { }
+
         protected string UserId => User.FindFirstValue(ClaimTypes.NameIdentifier);
         protected string UserEmail => User.FindFirstValue(ClaimTypes.Email);
         protected string UserPhone => User.FindFirstValue(ClaimTypes.MobilePhone);

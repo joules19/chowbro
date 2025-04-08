@@ -1,12 +1,12 @@
-using Chowbro.Core.Middlewares;
-using Microsoft.AspNetCore.Http;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Chowbro.Core.Entities.Vendor;
+using Chowbro.Core.Middlewares;
 using Chowbro.Core.Services.Interfaces.Auth;
 using Chowbro.Core.Services.Interfaces.Vendor;
+using Microsoft.AspNetCore.Http;
 
-namespace Chowbro.Infrastructure.Services
+namespace Chowbro.Infrastructure.Services.Auth
 {
     public class CurrentUserService : ICurrentUserService
     {

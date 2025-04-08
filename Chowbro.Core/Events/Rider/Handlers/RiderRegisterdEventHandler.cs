@@ -1,4 +1,4 @@
-using Chowbro.Core.Interfaces.Rider;
+using Chowbro.Core.Repository.Interfaces.Rider;
 using MediatR;
 
 namespace Chowbro.Core.Events.Rider.Handlers

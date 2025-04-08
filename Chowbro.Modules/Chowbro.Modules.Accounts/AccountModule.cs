@@ -1,9 +1,10 @@
-using Chowbro.Core.Interfaces.Notifications;
 using Chowbro.Infrastructure.Services;
 using Chowbro.Modules.Accounts.Data.Seeders;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
+using Chowbro.Core.Services.Interfaces.Notifications;
+using Chowbro.Infrastructure.Services.Notifications;
 
 namespace Chowbro.Modules.Accounts
 {

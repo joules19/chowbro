@@ -1,6 +1,7 @@
 ﻿using Chowbro.Core.Entities;
 using Chowbro.Core.Entities.Vendor;
-using Chowbro.Core.Interfaces.Vendor;
+using Chowbro.Core.Repository.Interfaces.Vendor;
+using Chowbro.Core.Services.Interfaces.Vendor;
 using Microsoft.AspNetCore.Identity;
 
 namespace Chowbro.Infrastructure.Services

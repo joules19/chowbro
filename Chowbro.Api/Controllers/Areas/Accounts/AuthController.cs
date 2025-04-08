@@ -24,6 +24,11 @@ namespace Chowbro.Api.Controllers.Areas.Accounts
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterUser model)
         {
+            if (HttpContext.Items.TryGetValue("DeviceId", out var deviceId))
+            {
+                model.DeviceId = deviceId.ToString();
+            }
+            
             var command = new RegisterCommand(model);
             var result = await _mediator.Send(command);
             return StatusCode((int)result.StatusCode, result);
@@ -49,7 +54,7 @@ namespace Chowbro.Api.Controllers.Areas.Accounts
         public async Task<IActionResult> VerifyOtp([FromBody] OtpVerification request)
         {
             var contactInfo = request.PhoneNumber ?? request.Email!;
-            var command = new VerifyOtpCommand(contactInfo, request.Otp!);
+            var command = new VerifyOtpCommand(contactInfo, request.Otp!, "");
             var result = await _mediator.Send(command);
             return StatusCode((int)result.StatusCode, result);
         }

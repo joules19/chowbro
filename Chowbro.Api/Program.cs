@@ -14,6 +14,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using System.Threading.RateLimiting;
+using Chowbro.Api.Filters;
+using Chowbro.Api.Middlewares;
 using Chowbro.Infrastructure.Persistence;
 using Chowbro.Modules.Customers;
 using Chowbro.Modules.Riders;
@@ -119,7 +121,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization();
 
 // API Configuration
-builder.Services.AddControllers();
+builder.Services.AddScoped<DeviceValidationFilter>();
+builder.Services.AddControllers(options => 
+{
+    options.Filters.Add<DeviceValidationFilter>();
+});
 builder.Services.AddEndpointsApiExplorer();
 
 
@@ -156,6 +162,8 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseMiddleware<ExceptionMiddleware>();
+app.UseMiddleware<DeviceInfoMiddleware>();
+
 
 // Swagger Configuration
 if (app.Environment.IsDevelopment())

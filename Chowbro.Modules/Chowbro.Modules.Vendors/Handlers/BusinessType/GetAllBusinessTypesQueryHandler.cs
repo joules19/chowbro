@@ -1,10 +1,10 @@
 using AutoMapper;
-using Chowbro.Core.Interfaces.Vendor;
 using Chowbro.Modules.Vendors.DTOs.BusinessType;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using System.Net;
 using Chowbro.Core.Models;
+using Chowbro.Core.Repository.Interfaces.Vendor;
 using Chowbro.Modules.Vendors.Queries.BusinessType;
 
 namespace Chowbro.Modules.Vendors.Handlers.BusinessType

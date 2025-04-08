@@ -29,5 +29,10 @@ namespace Chowbro.Modules.Accounts.DTOs
 
         [Required]
         public string? Role { get; set; }
+        
+        // Device information
+        public string DeviceId { get; set; }
+        public string? DeviceName { get; set; }
+        public string? DeviceModel { get; set; }
     }
 }

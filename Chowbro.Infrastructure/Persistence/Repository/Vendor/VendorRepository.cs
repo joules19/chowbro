@@ -1,4 +1,5 @@
-﻿using Chowbro.Core.Interfaces.Vendor;
+﻿using Chowbro.Core.Entities.Product;
+using Chowbro.Core.Repository.Interfaces.Vendor;
 using Microsoft.EntityFrameworkCore;
 using static Chowbro.Core.Enums.Vendor;
 
@@ -119,7 +120,7 @@ namespace Chowbro.Infrastructure.Persistence.Repository.Vendor
                 .ToListAsync(cancellationToken);
         }
 
-        public async Task<IEnumerable<Product>> GetProductsAsync(Guid vendorId, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<Core.Entities.Product.Product>> GetProductsAsync(Guid vendorId, CancellationToken cancellationToken = default)
         {
             return await _context.Products
                 .Where(p => p.VendorId == vendorId)

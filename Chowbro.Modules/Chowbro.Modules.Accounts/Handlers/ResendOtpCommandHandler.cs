@@ -1,5 +1,4 @@
 ﻿using Chowbro.Core.Entities;
-using Chowbro.Core.Interfaces.Notifications;
 using Chowbro.Core.Models;
 using Chowbro.Infrastructure.Helpers;
 using Chowbro.Modules.Accounts.Commands.Auth;
@@ -7,6 +6,7 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
+using Chowbro.Core.Services.Interfaces.Notifications;
 
 namespace Chowbro.Modules.Accounts.Commands.Handlers
 {

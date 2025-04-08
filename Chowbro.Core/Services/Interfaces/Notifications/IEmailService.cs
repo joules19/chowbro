@@ -1,4 +1,4 @@
-namespace Chowbro.Infrastructure.Services
+namespace Chowbro.Core.Services.Interfaces.Notifications
 {
     public interface IEmailService
     {

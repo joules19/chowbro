@@ -1,5 +1,4 @@
 using Chowbro.Core.Entities.Vendor;
-using Chowbro.Core.Interfaces.Vendor;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using System;
@@ -7,6 +6,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Chowbro.Core.Models;
+using Chowbro.Core.Repository.Interfaces.Vendor;
 using Chowbro.Modules.Vendors.Commands.BusinessType;
 
 namespace Chowbro.Modules.Vendors.Handlers.BusinessType

@@ -1,11 +1,13 @@
 ﻿
 using AutoMapper;
-using Chowbro.Core.Interfaces.Auth;
-using Chowbro.Core.Interfaces.Media;
 using Chowbro.Core.Models;
+using Chowbro.Core.Repository.Interfaces.Product;
 using Chowbro.Modules.Vendors.Commands.Product;
 using MediatR;
 using System.Net;
+using Chowbro.Core.Entities.Product;
+using Chowbro.Core.Services.Interfaces.Auth;
+using Chowbro.Core.Services.Interfaces.Media;
 using static Chowbro.Modules.Vendors.DTOs.Product.ProductModel;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 

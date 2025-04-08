@@ -1,6 +1,6 @@
 ﻿using Chowbro.Core.Entities.Location;
-using Chowbro.Core.Interfaces.Location;
-using Microsoft.EntityFrameworkCore;  
+using Chowbro.Core.Repository.Interfaces.Location;
+using Microsoft.EntityFrameworkCore;
 
 namespace Chowbro.Infrastructure.Persistence.Repositories.Location
 {

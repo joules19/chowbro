@@ -1,6 +1,7 @@
-using Chowbro.Core.Entities;
-using Chowbro.Core.Entities.Vendor;
+
 using static Chowbro.Core.Enums.Product;
+
+namespace Chowbro.Core.Entities.Product;
 
 public class Product : BaseEntity
 {
@@ -13,7 +14,7 @@ public class Product : BaseEntity
 
     // Relationships
     public Guid VendorId { get; set; }
-    public Vendor Vendor { get; set; }
+    public Vendor.Vendor Vendor { get; set; }
 
     public Guid? BranchId { get; set; }
     public Branch Branch { get; set; }

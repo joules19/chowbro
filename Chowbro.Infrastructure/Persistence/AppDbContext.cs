@@ -1,6 +1,8 @@
 using Chowbro.Core.Entities;
+using Chowbro.Core.Entities.Auth;
 using Chowbro.Core.Entities.Customer;
 using Chowbro.Core.Entities.Location;
+using Chowbro.Core.Entities.Product;
 using Chowbro.Core.Entities.Rider;
 using Chowbro.Core.Entities.Vendor;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -14,7 +16,10 @@ namespace Chowbro.Infrastructure.Persistence
 
         // Auth
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
-        
+        public DbSet<Device> Devices { get; set; }
+        public DbSet<DeviceLoginAttempt> DeviceLoginAttempts { get; set; }
+
+
         // Customers
         public DbSet<Customer> Customers { get; set; }
 
@@ -34,7 +39,7 @@ namespace Chowbro.Infrastructure.Persistence
         // Locations
         public DbSet<State> States { get; set; }
         public DbSet<Lga> Lgas { get; set; }
-        
+
         // Riders
         public DbSet<Rider> Riders { get; set; }
 
@@ -106,7 +111,7 @@ namespace Chowbro.Infrastructure.Persistence
 
             builder.Entity<Lga>()
                 .HasIndex(l => l.StateId);
-            
+
             builder.Entity<BusinessType>(entity =>
             {
                 entity.HasKey(e => e.Id);

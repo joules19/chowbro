@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using Chowbro.Core.Entities.Vendor;
-using Chowbro.Core.Interfaces.Vendor;
 using Chowbro.Core.Models.Settings;
 using Chowbro.Core.Models.Vendor;
+using Chowbro.Core.Repository.Interfaces.Vendor;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;

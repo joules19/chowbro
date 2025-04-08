@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Chowbro.Core.Entities.Rider;
-using Chowbro.Core.Interfaces.Rider;
+using Chowbro.Core.Repository.Interfaces.Rider;
 
 namespace Chowbro.Infrastructure.Persistence.Repositories
 {

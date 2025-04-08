@@ -1,17 +1,24 @@
-﻿using Chowbro.Core.Interfaces.Auth;
-using Chowbro.Core.Interfaces.Customer;
-using Chowbro.Core.Interfaces.Location;
-using Chowbro.Core.Interfaces.Media;
-using Chowbro.Core.Interfaces.Notifications;
-using Chowbro.Core.Interfaces.Rider;
-using Chowbro.Core.Interfaces.Vendor;
-using Chowbro.Core.Models.Settings;
+﻿using Chowbro.Core.Models.Settings;
+using Chowbro.Core.Repository.Interfaces.Customer;
+using Chowbro.Core.Repository.Interfaces.Location;
+using Chowbro.Core.Repository.Interfaces.Product;
+using Chowbro.Core.Repository.Interfaces.Rider;
+using Chowbro.Core.Repository.Interfaces.Vendor;
+using Chowbro.Core.Services.Interfaces.Auth;
+using Chowbro.Core.Services.Interfaces.Media;
+using Chowbro.Core.Services.Interfaces.Notifications;
+using Chowbro.Core.Services.Interfaces.Vendor;
 using Chowbro.Infrastructure.Persistence.Repositories;
 using Chowbro.Infrastructure.Persistence.Repositories.Location;
+using Chowbro.Infrastructure.Persistence.Repository.Auth;
 using Chowbro.Infrastructure.Persistence.Repository.Customer;
+using Chowbro.Infrastructure.Persistence.Repository.Product;
 using Chowbro.Infrastructure.Persistence.Repository.Vendor;
 using Chowbro.Infrastructure.Services;
+using Chowbro.Infrastructure.Services.Auth;
 using Chowbro.Infrastructure.Services.BackgroundServices;
+using Chowbro.Infrastructure.Services.Media;
+using Chowbro.Infrastructure.Services.Notifications;
 using Chowbro.Infrastructure.Settings;
 using CloudinaryDotNet;
 using Microsoft.Extensions.Configuration;
@@ -27,10 +34,11 @@ namespace Chowbro.Infrastructure
             // Database Repositories
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IProductCategoryRepository, ProductCategoryRepository>();
-            services.AddScoped<IVendorRepository, VendorRepository>(); 
+            services.AddScoped<IVendorRepository, VendorRepository>();
             services.AddScoped<IBusinessTypeRepository, BusinessTypeRepository>();
             services.AddScoped<IRiderRepository, RiderRepository>();
             services.AddScoped<ICustomerRepository, CustomerRepository>();
+            services.AddScoped<IDeviceRepository, DeviceRepository>();
 
             services.AddScoped<IStateRepository, StateRepository>();
             services.AddScoped<ILgaRepository, LgaRepository>();
@@ -39,6 +47,8 @@ namespace Chowbro.Infrastructure
             services.AddScoped<ICurrentUserService, CurrentUserService>();
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IOtpService, OtpService>();
+            services.AddScoped<IDeviceValidationService, DeviceValidationService>();
+
 
             services.Configure<VendorApprovalOptions>(configuration.GetSection("VendorApproval"));
 

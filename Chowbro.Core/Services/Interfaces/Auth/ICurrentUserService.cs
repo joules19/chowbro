@@ -1,4 +1,4 @@
-namespace Chowbro.Core.Interfaces.Auth;
+namespace Chowbro.Core.Services.Interfaces.Auth;
 
 public interface ICurrentUserService
 {

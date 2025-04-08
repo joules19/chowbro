@@ -8,11 +8,14 @@ namespace Chowbro.Modules.Accounts.Commands.Auth
     {
         public string ContactInfo { get; }
         public string Otp { get; }
+        public string DeviceId { get; }
 
-        public VerifyOtpCommand(string contactInfo, string otp)
+
+        public VerifyOtpCommand(string contactInfo, string otp, string deviceId)
         {
             ContactInfo = contactInfo;
             Otp = otp;
+            DeviceId = deviceId;
         }
     }
 }

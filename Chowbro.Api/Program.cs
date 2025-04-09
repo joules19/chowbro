@@ -122,7 +122,7 @@ builder.Services.AddAuthorization();
 
 // API Configuration
 builder.Services.AddScoped<DeviceValidationFilter>();
-builder.Services.AddControllers(options => 
+builder.Services.AddControllers(options =>
 {
     options.Filters.Add<DeviceValidationFilter>();
 });

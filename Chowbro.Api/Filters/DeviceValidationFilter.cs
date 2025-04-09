@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Extensions.Logging;
-using Chowbro.Core.Services;
+
 using Chowbro.Core.Services.Interfaces.Auth;
 using Chowbro.Infrastructure.Persistence.Repository.Auth;
 
@@ -36,6 +35,7 @@ namespace Chowbro.Api.Filters
                 return;
             }
 
+            // Validate device ID (always perform device validation)
             if (!context.HttpContext.Request.Headers.TryGetValue(DeviceIdHeaderName, out var deviceIdHeader))
             {
                 _logger.LogWarning("Request missing device ID header");
@@ -48,7 +48,7 @@ namespace Chowbro.Api.Filters
             }
 
             var deviceId = deviceIdHeader.ToString();
-            
+
             // Check if device exists and is not blacklisted
             var isValidDevice = await _deviceValidationService.IsValidDeviceAsync(deviceId);
             if (!isValidDevice)
@@ -62,13 +62,13 @@ namespace Chowbro.Api.Filters
                 return;
             }
 
-            // Check for suspicious activity
+            // Check for suspicious activity (e.g., too many login attempts)
             var loginCount = await _deviceRepository.GetLoginCountToday(deviceId);
             if (loginCount > MaxLoginAttempts)
             {
                 await _deviceRepository.FlagForReview(deviceId);
                 _logger.LogWarning($"Suspicious activity from device {deviceId} with {loginCount} attempts today");
-                
+
                 context.Result = new UnauthorizedObjectResult(new
                 {
                     Message = "Account access temporarily restricted due to suspicious activity",
@@ -77,21 +77,32 @@ namespace Chowbro.Api.Filters
                 return;
             }
 
-            // Record this login attempt
-            await _deviceRepository.RecordLoginAttempt(deviceId, context.HttpContext.Connection.RemoteIpAddress?.ToString());
-
-            // Update last seen
+            // Update the device's last seen time
             await _deviceValidationService.UpdateLastSeenAsync(deviceId);
 
             // Store validated device ID for use in controllers
             context.HttpContext.Items["ValidatedDeviceId"] = deviceId;
+
+            // Check if the action or controller is marked with [AuthenticationAction]
+            var isAuthenticationAction = context.ActionDescriptor.EndpointMetadata
+                .Any(em => em is AuthenticationActionAttribute);
+
+            // Only record the login attempt if it's an authentication-related action
+            if (isAuthenticationAction)
+            {
+                await _deviceRepository.RecordLoginAttempt(deviceId, context.HttpContext.Connection.RemoteIpAddress?.ToString());
+            }
+
             await next();
         }
-        
+
         [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
         public class SkipDeviceValidationAttribute : Attribute { }
-        
+
         [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
         public class RequireDeviceValidationAttribute : Attribute { }
+
+        [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
+        public class AuthenticationActionAttribute : Attribute { }
     }
 }

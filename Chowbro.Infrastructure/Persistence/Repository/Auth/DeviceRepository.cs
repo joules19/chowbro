@@ -117,12 +117,12 @@ namespace Chowbro.Infrastructure.Persistence.Repository.Auth
         }
 
         public async Task<IEnumerable<Device>> FindDevicesAsync(
-            string searchTerm, 
-            int pageNumber, 
+            string searchTerm,
+            int pageNumber,
             int pageSize)
         {
             return await _context.Devices
-                .Where(d => 
+                .Where(d =>
                     d.DeviceId.Contains(searchTerm) ||
                     d.DeviceName.Contains(searchTerm) ||
                     d.Model.Contains(searchTerm))
@@ -161,6 +161,49 @@ namespace Chowbro.Infrastructure.Persistence.Repository.Auth
             };
             await _context.DeviceLoginAttempts.AddAsync(attempt);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task AddAssociationHistoryAsync(DeviceAssociationHistory history)
+        {
+            await _context.DeviceAssociationHistories.AddAsync(history);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<List<DeviceAssociationHistory>> GetDeviceAssociationHistoryAsync(string deviceId)
+        {
+            return await _context.DeviceAssociationHistories
+                .Where(h => h.DeviceId == deviceId)
+                .OrderByDescending(h => h.AssociatedAt)
+                .ToListAsync();
+        }
+
+        public async Task<List<DeviceAssociationHistory>> GetUserDeviceHistoryAsync(string userId)
+        {
+            return await _context.DeviceAssociationHistories
+                .Where(h => h.UserId == userId)
+                .OrderByDescending(h => h.AssociatedAt)
+                .ToListAsync();
+        }
+
+        public async Task DisassociateDeviceAsync(string deviceId, string ipAddress = null)
+        {
+            var history = await _context.DeviceAssociationHistories
+                .Where(h => h.DeviceId == deviceId && h.DisassociatedAt == null)
+                .OrderByDescending(h => h.AssociatedAt)
+                .FirstOrDefaultAsync();
+
+            if (history != null)
+            {
+                history.DisassociatedAt = DateTime.UtcNow;
+                await _context.SaveChangesAsync();
+            }
+
+            var device = await GetByDeviceIdAsync(deviceId);
+            if (device != null)
+            {
+                device.UserId = null;
+                await UpdateAsync(device);
+            }
         }
     }
 }

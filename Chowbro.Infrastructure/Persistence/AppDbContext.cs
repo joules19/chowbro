@@ -18,6 +18,7 @@ namespace Chowbro.Infrastructure.Persistence
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<Device> Devices { get; set; }
         public DbSet<DeviceLoginAttempt> DeviceLoginAttempts { get; set; }
+        public DbSet<DeviceAssociationHistory> DeviceAssociationHistories { get; set; }
 
 
         // Customers

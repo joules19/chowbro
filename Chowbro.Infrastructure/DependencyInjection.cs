@@ -16,7 +16,6 @@ using Chowbro.Infrastructure.Persistence.Repository.Product;
 using Chowbro.Infrastructure.Persistence.Repository.Vendor;
 using Chowbro.Infrastructure.Services;
 using Chowbro.Infrastructure.Services.Auth;
-using Chowbro.Infrastructure.Services.BackgroundServices;
 using Chowbro.Infrastructure.Services.Media;
 using Chowbro.Infrastructure.Services.Notifications;
 using Chowbro.Infrastructure.Settings;
@@ -39,6 +38,8 @@ namespace Chowbro.Infrastructure
             services.AddScoped<IRiderRepository, RiderRepository>();
             services.AddScoped<ICustomerRepository, CustomerRepository>();
             services.AddScoped<IDeviceRepository, DeviceRepository>();
+            services.AddScoped<IStoreOperationRepository, StoreOperationRepository>();
+
 
             services.AddScoped<IStateRepository, StateRepository>();
             services.AddScoped<ILgaRepository, LgaRepository>();

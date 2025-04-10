@@ -9,7 +9,7 @@ namespace Chowbro.Core.Events.Vendor.Handlers
     {
         private readonly IVendorRepository _vendorRepository;
         private readonly ILogger<VendorRegisteredEventHandler> _logger;
-        
+
         public VendorRegisteredEventHandler(
             IVendorRepository vendorRepository,
             ILogger<VendorRegisteredEventHandler> logger)
@@ -17,7 +17,7 @@ namespace Chowbro.Core.Events.Vendor.Handlers
             _vendorRepository = vendorRepository;
             _logger = logger;
         }
-        
+
         public async Task Handle(VendorRegisteredEvent notification, CancellationToken cancellationToken)
         {
             try
@@ -44,8 +44,11 @@ namespace Chowbro.Core.Events.Vendor.Handlers
                 }
 
                 // Create new vendor
-                var vendor = new Entities.Vendor.Vendor
+                var vendor = new Core.Entities.Vendor.Vendor
                 {
+                    Id = Guid.NewGuid(),
+                    CreatedAt = DateTime.UtcNow,
+                    IsDeleted = false,
                     BusinessName = notification.BusinessName ?? string.Empty,
                     LastName = notification.LastName,
                     FirstName = notification.FirstName,
@@ -54,7 +57,7 @@ namespace Chowbro.Core.Events.Vendor.Handlers
                     UserId = notification.UserId,
                     Status = VendorStatus.PendingApproval,
                 };
-                
+
                 await _vendorRepository.AddAsync(vendor);
                 await _vendorRepository.SaveChangesAsync();
 

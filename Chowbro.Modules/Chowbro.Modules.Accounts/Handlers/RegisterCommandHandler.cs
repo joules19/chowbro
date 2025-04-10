@@ -60,11 +60,20 @@ namespace Chowbro.Modules.Accounts.Handlers
                 return ApiResponse<OtpResponse>.Fail(null, "Email or phone number already in use. Please login.", HttpStatusCode.Conflict);
             }
 
+            if (string.IsNullOrWhiteSpace(model.DeviceId))
+            {
+                return ApiResponse<OtpResponse>.Fail(null,
+                    "Device identification is required for registration",
+                    HttpStatusCode.BadRequest);
+            }
+
             var existingDevice = await _deviceRepository.GetByDeviceIdAsync(model.DeviceId);
             if (existingDevice?.IsBlacklisted == true)
             {
                 _logger.LogWarning("Blacklisted device attempted registration: {DeviceId}", model.DeviceId);
-                return ApiResponse<OtpResponse>.Fail(null, "Device not allowed", HttpStatusCode.Forbidden);
+                return ApiResponse<OtpResponse>.Fail(null,
+                    "This device cannot be used for registration. Please contact support.",
+                    HttpStatusCode.Forbidden);
             }
 
             // Create user

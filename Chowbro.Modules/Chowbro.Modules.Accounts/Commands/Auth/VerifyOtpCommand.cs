@@ -11,7 +11,7 @@ namespace Chowbro.Modules.Accounts.Commands.Auth
         public string DeviceId { get; }
 
 
-        public VerifyOtpCommand(string contactInfo, string otp, string deviceId)
+        public VerifyOtpCommand(string contactInfo, string otp, string? deviceId)
         {
             ContactInfo = contactInfo;
             Otp = otp;

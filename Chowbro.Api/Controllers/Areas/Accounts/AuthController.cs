@@ -26,10 +26,12 @@ namespace Chowbro.Api.Controllers.Areas.Accounts
         [SkipDeviceValidationAttribute]
         public async Task<IActionResult> Register([FromBody] RegisterUser model)
         {
-            if (HttpContext.Items.TryGetValue("DeviceId", out var deviceId))
-            {
-                model.DeviceId = deviceId.ToString();
-            }
+
+            var userDeviceId = HttpContext.Items.TryGetValue("DeviceId", out var deviceId)
+           ? deviceId?.ToString() ?? string.Empty
+           : string.Empty;
+
+            model.DeviceId = userDeviceId;
 
             var command = new RegisterCommand(model);
             var result = await _mediator.Send(command);
@@ -54,27 +56,25 @@ namespace Chowbro.Api.Controllers.Areas.Accounts
 
         [HttpPost("login/verify-login-otp")]
         [AuthenticationAction]
-
         public async Task<IActionResult> VerifyOtp([FromBody] OtpVerification request)
         {
+            var userDeviceId = HttpContext.Items.TryGetValue("DeviceId", out var deviceId)
+            ? deviceId?.ToString() ?? string.Empty
+            : string.Empty;
             var contactInfo = request.PhoneNumber ?? request.Email!;
-            var command = new VerifyOtpCommand(contactInfo, request.Otp!, "");
+            var command = new VerifyOtpCommand(contactInfo, request.Otp!, userDeviceId!);
             var result = await _mediator.Send(command);
             return StatusCode((int)result.StatusCode, result);
         }
 
         [HttpPost("refresh-token")]
         [AuthenticationAction]
-
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest request)
         {
 
-            var userDeviceId = String.Empty;
-            if (HttpContext.Items.TryGetValue("DeviceId", out var deviceId))
-            {
-                userDeviceId = deviceId.ToString();
-            }
-
+            var userDeviceId = HttpContext.Items.TryGetValue("DeviceId", out var deviceId)
+            ? deviceId?.ToString() ?? string.Empty
+            : string.Empty;
             var command = new RefreshTokenCommand(request.RefreshToken!, userDeviceId!);
             var result = await _mediator.Send(command);
             return StatusCode((int)result.StatusCode, result);

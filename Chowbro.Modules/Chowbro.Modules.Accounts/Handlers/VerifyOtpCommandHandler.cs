@@ -63,10 +63,12 @@ namespace Chowbro.Modules.Accounts.Handlers
                 return ApiResponse<AuthResponse>.Fail(null, "Invalid or expired OTP.",
                     statusCode: HttpStatusCode.BadRequest);
 
-            await _deviceRepository.RecordLoginAttempt(request.DeviceId, _httpContextAccessor.HttpContext.Connection.RemoteIpAddress?.ToString());
+            // await _deviceRepository.RecordLoginAttempt(request.DeviceId, _httpContextAccessor.HttpContext.Connection.RemoteIpAddress?.ToString());
 
             if (string.IsNullOrEmpty(request.DeviceId))
-                return ApiResponse<AuthResponse>.Fail(null, "Device ID is required.", HttpStatusCode.BadRequest);
+                _logger.LogWarning("Request missing device ID");
+            // Continue without failing, but log the issue
+            //return ApiResponse<AuthResponse>.Fail(null, "Device ID is required.", HttpStatusCode.BadRequest);
 
             try
             {
@@ -75,9 +77,7 @@ namespace Chowbro.Modules.Accounts.Handlers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Device association failed for {DeviceId}", request.DeviceId);
-                return ApiResponse<AuthResponse>.Fail(null,
-                    "Device processing failed. Please contact support.",
-                    HttpStatusCode.InternalServerError);
+                // Continue without failing the auth flow
             }
 
             // Clear OTP and confirm phone if needed
@@ -101,6 +101,7 @@ namespace Chowbro.Modules.Accounts.Handlers
 
             if (device == null)
             {
+                // New device - create and log
                 device = new Device
                 {
                     DeviceId = deviceId,
@@ -112,31 +113,36 @@ namespace Chowbro.Modules.Accounts.Handlers
                     LastAssociatedDate = now
                 };
                 await _deviceRepository.AddAsync(device);
+                await LogDeviceActivity(deviceId, userId, "InitialAssociation");
             }
             else
             {
-                device.UserId = userId;
-                device.LastSeen = now;
-                device.AssociationCount++;
-                device.LastAssociatedDate = now;
-                await _deviceRepository.UpdateAsync(device);
-
-                if (device.AssociationCount > 3)
+                // Only log if the user is different
+                if (device.UserId != userId)
                 {
-                    _logger.LogWarning("High device associations: {DeviceId} count {Count}",
-                        deviceId, device.AssociationCount);
+                    device.UserId = userId;
+                    device.AssociationCount++;
+                    device.LastAssociatedDate = now;
+                    await LogDeviceActivity(deviceId, userId, "Reassociation");
                 }
+
+                device.LastSeen = now;
+                await _deviceRepository.UpdateAsync(device);
             }
-
-            await LogDeviceActivity(deviceId, userId, "Login");
         }
-
         private async Task LogDeviceActivity(string deviceId, string userId, string activityType)
         {
-            var ipAddress = _httpContextAccessor.HttpContext?.Connection?.RemoteIpAddress?.ToString();
-            var userAgent = _httpContextAccessor.HttpContext?.Request?.Headers["User-Agent"].ToString();
+            // Only log if we have a valid HTTP context
+            if (_httpContextAccessor.HttpContext == null)
+            {
+                _logger.LogWarning("Cannot log device activity - HTTP context is null");
+                return;
+            }
 
-            await _deviceRepository.AddAssociationHistoryAsync(new DeviceAssociationHistory
+            var ipAddress = _httpContextAccessor.HttpContext.Connection.RemoteIpAddress?.ToString();
+            var userAgent = _httpContextAccessor.HttpContext.Request.Headers["User-Agent"].ToString();
+
+            var historyEntry = new DeviceAssociationHistory
             {
                 DeviceId = deviceId,
                 UserId = userId,
@@ -144,7 +150,18 @@ namespace Chowbro.Modules.Accounts.Handlers
                 AssociationType = activityType,
                 IpAddress = ipAddress,
                 UserAgent = userAgent
-            });
+            };
+
+            try
+            {
+                await _deviceRepository.AddAssociationHistoryAsync(historyEntry);
+                _logger.LogDebug("Logged device activity: {DeviceId} for user {UserId} ({ActivityType})",
+                    deviceId, userId, activityType);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to log device activity for {DeviceId}", deviceId);
+            }
         }
 
         private async Task PublishRegistrationEvent(ApplicationUser user, CancellationToken cancellationToken)

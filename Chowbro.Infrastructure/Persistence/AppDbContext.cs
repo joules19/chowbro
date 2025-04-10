@@ -28,6 +28,8 @@ namespace Chowbro.Infrastructure.Persistence
         public DbSet<Vendor> Vendors { get; set; }
         public DbSet<Branch> Branches { get; set; }
         public DbSet<BusinessType> BusinessTypes { get; set; }
+        public DbSet<StoreOperation> StoreOperations { get; set; }
+        public DbSet<OpeningHours> OpeningHours { get; set; }
 
 
         // Products

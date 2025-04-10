@@ -41,5 +41,7 @@ namespace Chowbro.Infrastructure.Persistence.Repository.Auth
         Task<List<DeviceAssociationHistory>> GetDeviceAssociationHistoryAsync(string deviceId);
         Task<List<DeviceAssociationHistory>> GetUserDeviceHistoryAsync(string userId);
         Task DisassociateDeviceAsync(string deviceId, string ipAddress = null);
+        Task<DeviceAssociationHistory?> GetLastActivityAsync(string deviceId);
+
     }
 }

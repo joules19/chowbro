@@ -4,8 +4,6 @@ using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Threading.Tasks;
 using Chowbro.Modules.Vendors.Queries;
 
 namespace Chowbro.Api.Controllers.Areas.Vendors
@@ -46,7 +44,7 @@ namespace Chowbro.Api.Controllers.Areas.Vendors
             var result = await _mediator.Send(query);
             return StatusCode((int)result.StatusCode, result);
         }
-        
+
         [HttpPut("update-vendor")]
         public async Task<IActionResult> UpdateVendor([FromBody] UpdateVendorRequest request)
         {
@@ -55,8 +53,15 @@ namespace Chowbro.Api.Controllers.Areas.Vendors
                 request.FirstName,
                 request.LastName,
                 request.Description);
-    
+
             var result = await _mediator.Send(command);
+            return StatusCode((int)result.StatusCode, result);
+        }
+
+        [HttpGet("onboarding-status")]
+        public async Task<IActionResult> GetOnboardingStatus()
+        {
+            var result = await _mediator.Send(new GetVendorOnboardingStatusCommand());
             return StatusCode((int)result.StatusCode, result);
         }
 

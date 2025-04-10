@@ -17,11 +17,13 @@ public class Vendor : BaseEntity
 
     public string? CoverPublicId { get; set; }
     public string? LogoPublicId { get; set; }
-    
+
     public string PhoneNumber { get; set; }
     public string Email { get; set; }
     public string UserId { get; set; }
     public ApplicationUser User { get; set; }
+    public string? BusinessTypeId { get; set; }
+    public BusinessType? BusinessType { get; set; }
 
     public VendorStatus Status { get; set; } = VendorStatus.PendingApproval;
 

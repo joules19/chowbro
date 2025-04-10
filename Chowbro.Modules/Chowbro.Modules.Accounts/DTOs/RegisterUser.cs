@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Chowbro.Modules.Accounts.DTOs
 {
@@ -31,8 +32,11 @@ namespace Chowbro.Modules.Accounts.DTOs
         public string? Role { get; set; }
 
         // Device information
+        [JsonIgnore]
         public string? DeviceId { get; set; }
+        [JsonIgnore]
         public string? DeviceName { get; set; }
+        [JsonIgnore]
         public string? DeviceModel { get; set; }
     }
 }

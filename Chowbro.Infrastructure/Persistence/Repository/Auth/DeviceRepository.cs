@@ -205,5 +205,20 @@ namespace Chowbro.Infrastructure.Persistence.Repository.Auth
                 await UpdateAsync(device);
             }
         }
+
+        public async Task<DeviceAssociationHistory?> GetLastActivityAsync(string deviceId)
+        {
+            try
+            {
+                return await _context.DeviceAssociationHistories
+                    .Where(d => d.DeviceId == deviceId)
+                    .OrderByDescending(d => d.AssociatedAt)
+                    .FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
     }
 }

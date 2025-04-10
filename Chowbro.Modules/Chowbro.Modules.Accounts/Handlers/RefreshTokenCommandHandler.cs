@@ -47,53 +47,65 @@ namespace Chowbro.Modules.Accounts.Handlers
 
             if (user == null || user.RefreshTokenExpiryTime < DateTime.UtcNow)
                 return ApiResponse<AuthResponse>.Fail(null, "Invalid or expired refresh token.", statusCode: HttpStatusCode.Unauthorized);
-
             if (!string.IsNullOrEmpty(request.DeviceId))
             {
                 try
                 {
+                    // Device validation is security-relevant but not critical
                     var device = await _deviceRepository.GetByDeviceIdAsync(request.DeviceId);
+
                     if (device == null || device.UserId != user.Id || device.IsBlacklisted)
                     {
                         _logger.LogWarning("Device validation failed for {DeviceId} user {UserId}",
                             request.DeviceId, user.Id);
-                        return ApiResponse<AuthResponse>.Fail(null, "Device verification failed.",
-                            statusCode: HttpStatusCode.Forbidden);
+                        // Continue without failing - just log the warning
                     }
-
-                    // Update device tracking
-                    device.LastSeen = DateTime.UtcNow;
-                    device.AssociationCount++;
-                    await _deviceRepository.UpdateAsync(device);
-
-                    // Log activity
-                    await LogDeviceActivity(request.DeviceId, user.Id, "TokenRefresh");
+                    else
+                    {
+                        device.LastSeen = DateTime.UtcNow;
+                        await _deviceRepository.UpdateAsync(device);
+                        await LogDeviceActivity(device, user.Id, request.DeviceId);
+                    }
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Device processing error during refresh for {DeviceId}", request.DeviceId);
-                    // Continue without failing the request
+                    // Continue the refresh flow despite device errors
                 }
             }
-
             return await GenerateAuthResponse(user, request.DeviceId);
         }
 
-        private async Task LogDeviceActivity(string deviceId, string userId, string activityType)
+        private async Task LogDeviceActivity(Device existingDevice, string userId, string deviceId)
         {
-            var ipAddress = _httpContextAccessor.HttpContext?.Connection?.RemoteIpAddress?.ToString();
-            var userAgent = _httpContextAccessor.HttpContext?.Request?.Headers["User-Agent"].ToString();
+            var currentIp = _httpContextAccessor.HttpContext?.Connection?.RemoteIpAddress?.ToString();
+            var currentUserAgent = _httpContextAccessor.HttpContext?.Request?.Headers["User-Agent"].ToString();
 
-            await _deviceRepository.AddAssociationHistoryAsync(new DeviceAssociationHistory
+            // Get the most recent activity for this device
+            var lastActivity = await _deviceRepository.GetLastActivityAsync(deviceId);
+
+            // Only log if:
+            // 1. This is the first activity ever for this device, OR
+            // 2. The IP address has changed, OR
+            // 3. The User-Agent has changed
+            if (lastActivity == null ||
+                lastActivity.IpAddress != currentIp ||
+                lastActivity.UserAgent != currentUserAgent)
             {
-                DeviceId = deviceId,
-                UserId = userId,
-                AssociatedAt = DateTime.UtcNow,
-                AssociationType = activityType,
-                IpAddress = ipAddress,
-                UserAgent = userAgent
-            });
+                await _deviceRepository.AddAssociationHistoryAsync(new DeviceAssociationHistory
+                {
+                    DeviceId = deviceId,
+                    UserId = userId,
+                    AssociatedAt = DateTime.UtcNow,
+                    AssociationType = "DeviceRefresh",
+                    IpAddress = currentIp,
+                    UserAgent = currentUserAgent
+                });
+
+                _logger.LogInformation("Logged significant device activity for {DeviceId} (IP or UA change)", deviceId);
+            }
         }
+
 
         private async Task<ApiResponse<AuthResponse>> GenerateAuthResponse(ApplicationUser user, string? deviceId)
         {
@@ -104,13 +116,23 @@ namespace Chowbro.Modules.Accounts.Handlers
             user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
             await _userManager.UpdateAsync(user);
 
+            var roles = await _userManager.GetRolesAsync(user);
+
             return ApiResponse<AuthResponse>.Success(new AuthResponse
             {
                 AccessToken = token,
                 RefreshToken = refreshToken,
                 Expiration = DateTime.UtcNow.AddMinutes(_configuration.GetValue<int>("JwtSettings:ExpiresInMinutes")),
                 DeviceId = deviceId,
-                User = MapToUserDto(user)
+                User = new UserDto
+                {
+                    Id = user.Id,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Email = user.Email!,
+                    PhoneNumber = user.PhoneNumber!,
+                    Roles = roles.ToList()
+                }
             });
         }
 
@@ -129,13 +151,11 @@ namespace Chowbro.Modules.Accounts.Handlers
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
-            // Add roles as individual claims
             foreach (var role in roles)
             {
                 claims.Add(new Claim(ClaimTypes.Role, role));
             }
 
-            // Optional device claim
             if (!string.IsNullOrEmpty(deviceId))
             {
                 claims.Add(new Claim("device_id", deviceId));
@@ -154,18 +174,6 @@ namespace Chowbro.Modules.Accounts.Handlers
 
             return new JwtSecurityTokenHandler().WriteToken(
                 new JwtSecurityTokenHandler().CreateToken(tokenDescriptor));
-        }
-
-        private static UserDto MapToUserDto(ApplicationUser user)
-        {
-            return new UserDto
-            {
-                Id = user.Id,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Email = user.Email!,
-                PhoneNumber = user.PhoneNumber!
-            };
         }
 
         private static string GenerateRefreshToken()

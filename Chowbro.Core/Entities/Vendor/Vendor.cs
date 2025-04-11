@@ -20,9 +20,11 @@ public class Vendor : BaseEntity
 
     public string PhoneNumber { get; set; }
     public string Email { get; set; }
+    public string? BusinessPhoneNumber { get; set; }
+    public string? BusinessEmail { get; set; }
     public string UserId { get; set; }
     public ApplicationUser User { get; set; }
-    public string? BusinessTypeId { get; set; }
+    public Guid? BusinessTypeId { get; set; }
     public BusinessType? BusinessType { get; set; }
 
     public VendorStatus Status { get; set; } = VendorStatus.PendingApproval;

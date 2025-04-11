@@ -4,15 +4,20 @@ namespace Chowbro.Modules.Vendors.DTOs.Vendor
 {
     public class UpdateVendorRequest
     {
-        public string? BusinessName { get; }
-        public string? FirstName { get; }
-        public string? LastName { get; }
-        public string? RcNumber { get; }
-        public string? Description { get; }
-        public string? Email { get; }
-        public string? PhoneNumber { get; }
-        
-        public IFormFile? LogoFile { get; }
-        public IFormFile? CoverFile { get; }
+        public string? BusinessName { get; set; }
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
+        public string? RcNumber { get; set; }
+        public string? Description { get; set; }
+        public string? Email { get; set; }
+        public string? PhoneNumber { get; set; }
+        public string? BusinessEmail { get; set; }
+
+        public Guid? BusinessTypeId { get; set; }
+
+        public string? BusinessPhoneNumber { get; set; }
+
+        public IFormFile? LogoFile { get; set; }
+        public IFormFile? CoverFile { get; set; }
     }
 }

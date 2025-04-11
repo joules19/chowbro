@@ -7,12 +7,14 @@ using System.Net;
 using Chowbro.Core.Repository.Interfaces.Vendor;
 using Chowbro.Core.Services.Interfaces.Auth;
 using Chowbro.Core.Services.Interfaces.Media;
+using Chowbro.Core.Models.Vendor;
 
 namespace Chowbro.Modules.Vendors.Handlers.Vendor
 {
-    public class UpdateVendorCommandHandler : IRequestHandler<UpdateVendorCommand, ApiResponse<bool>>
+    public class UpdateVendorCommandHandler : IRequestHandler<UpdateVendorCommand, ApiResponse<object?>>
     {
         private readonly IVendorRepository _vendorRepository;
+        private readonly IBusinessTypeRepository _businessTypeRepository;
         private readonly IMediator _mediator;
         private readonly ILogger<UpdateVendorCommandHandler> _logger;
         private readonly ICurrentUserService _currentUserService;
@@ -23,29 +25,31 @@ namespace Chowbro.Modules.Vendors.Handlers.Vendor
             IMediator mediator,
             ILogger<UpdateVendorCommandHandler> logger,
             ICurrentUserService currentUserService,
-            ICloudinaryService cloudinaryService)
+            ICloudinaryService cloudinaryService,
+            IBusinessTypeRepository businessTypeRepository)
         {
             _vendorRepository = vendorRepository;
             _mediator = mediator;
             _logger = logger;
             _currentUserService = currentUserService;
             _cloudinaryService = cloudinaryService;
+            _businessTypeRepository = businessTypeRepository;
         }
 
-        public async Task<ApiResponse<bool>> Handle(UpdateVendorCommand request, CancellationToken cancellationToken)
+        public async Task<ApiResponse<object?>> Handle(UpdateVendorCommand request, CancellationToken cancellationToken)
         {
             try
             {
                 var vendorId = await _currentUserService.GetVendorIdAsync();
                 if (!vendorId.HasValue)
                 {
-                    return ApiResponse<bool>.Fail(false, "Vendor not found", HttpStatusCode.NotFound);
+                    return ApiResponse<object?>.Fail(null, "Vendor not found", HttpStatusCode.NotFound);
                 }
 
                 var vendor = await _vendorRepository.GetByIdAsync(vendorId.Value, cancellationToken);
                 if (vendor == null)
                 {
-                    return ApiResponse<bool>.Fail(false, "Vendor not found", HttpStatusCode.NotFound);
+                    return ApiResponse<object?>.Fail(null, "Vendor not found", HttpStatusCode.NotFound);
                 }
 
                 // Track changes for event publishing
@@ -96,6 +100,30 @@ namespace Chowbro.Modules.Vendors.Handlers.Vendor
                     contactInfoChanged = true;
                 }
 
+                if (request.BusinessEmail != null && vendor.BusinessEmail != request.BusinessEmail)
+                {
+                    vendor.BusinessEmail = request.BusinessEmail;
+                    contactInfoChanged = true;
+                }
+
+                if (request.BusinessPhoneNumber != null && vendor.BusinessPhoneNumber != request.BusinessPhoneNumber)
+                {
+                    vendor.BusinessPhoneNumber = request.BusinessPhoneNumber;
+                    contactInfoChanged = true;
+                }
+
+                // Update business type if provided
+                if (request.BusinessTypeId != null && vendor.BusinessTypeId != request.BusinessTypeId)
+                {
+                    var businessTypeExists = await _businessTypeRepository.ExistsAsync(request.BusinessTypeId.Value, cancellationToken);
+                    if (!businessTypeExists)
+                    {
+                        return ApiResponse<object?>.Fail(null, "Invalid Business Type ID", HttpStatusCode.BadRequest);
+                    }
+
+                    vendor.BusinessTypeId = request.BusinessTypeId;
+                }
+
                 // Handle logo upload
                 if (request.LogoFile != null)
                 {
@@ -103,7 +131,7 @@ namespace Chowbro.Modules.Vendors.Handlers.Vendor
                     if (uploadResult.Error != null)
                     {
                         _logger.LogError("Failed to upload logo: {Error}", uploadResult.Error.Message);
-                        return ApiResponse<bool>.Fail(false, "Failed to upload logo", HttpStatusCode.BadRequest);
+                        return ApiResponse<object?>.Fail(null, "Failed to upload logo", HttpStatusCode.BadRequest);
                     }
 
                     // Delete old logo if exists
@@ -124,7 +152,7 @@ namespace Chowbro.Modules.Vendors.Handlers.Vendor
                     if (uploadResult.Error != null)
                     {
                         _logger.LogError("Failed to upload cover image: {Error}", uploadResult.Error.Message);
-                        return ApiResponse<bool>.Fail(false, "Failed to upload cover image", HttpStatusCode.BadRequest);
+                        return ApiResponse<object?>.Fail(null, "Failed to upload cover image", HttpStatusCode.BadRequest);
                     }
 
                     // Delete old cover if exists
@@ -150,12 +178,50 @@ namespace Chowbro.Modules.Vendors.Handlers.Vendor
                         vendor.LastName), cancellationToken);
                 }
 
-                return ApiResponse<bool>.Success(true, "Vendor updated successfully", HttpStatusCode.OK);
+                var vendorDto = new VendorDto
+                {
+                    Id = vendor.Id,
+                    BusinessName = vendor.BusinessName,
+                    FirstName = vendor.FirstName,
+                    LastName = vendor.LastName,
+                    RcNumber = vendor.RcNumber,
+                    Description = vendor.Description,
+                    LogoUrl = vendor.LogoUrl,
+                    CoverImageUrl = vendor.CoverImageUrl,
+                    CoverPublicId = vendor.CoverPublicId,
+                    LogoPublicId = vendor.LogoPublicId,
+                    PhoneNumber = vendor.PhoneNumber,
+                    Email = vendor.Email,
+                    BusinessPhoneNumber = vendor.BusinessPhoneNumber,
+                    BusinessEmail = vendor.BusinessEmail,
+                    UserId = vendor.UserId,
+                    BusinessTypeId = vendor.BusinessTypeId,
+                    BusinessTypeName = vendor.BusinessType?.Name,
+                    Status = vendor.Status.ToString(),
+                    CreatedAt = vendor.CreatedAt,
+                    Branches = vendor.Branches.Select(b => new BranchDto
+                    {
+                        Id = b.Id,
+                        Name = b.Name,
+                        PhoneNumber = b.PhoneNumber,
+                        Address = b.Address,
+                        City = b.City,
+                        StateId = b.StateId,
+                        LgaId = b.LgaId,
+                        Country = b.Country,
+                        PostalCode = b.PostalCode,
+                        Latitude = b.Latitude,
+                        Longitude = b.Longitude,
+                        IsMainBranch = b.IsMainBranch
+                    }).ToList()
+                };
+
+                return ApiResponse<object?>.Success(vendorDto, "Vendor updated successfully", HttpStatusCode.OK);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error updating vendor");
-                return ApiResponse<bool>.Fail(false, "Error updating vendor", HttpStatusCode.InternalServerError);
+                return ApiResponse<object?>.Fail(null, "Error updating vendor", HttpStatusCode.InternalServerError);
             }
         }
     }

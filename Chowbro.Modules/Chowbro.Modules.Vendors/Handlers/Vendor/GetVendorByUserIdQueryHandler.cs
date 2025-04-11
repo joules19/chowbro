@@ -29,7 +29,8 @@ namespace Chowbro.Modules.Vendors.Handlers.Vendor
                 .Include(v => v.Branches)
                 .ThenInclude(b => b.State)
                 .Include(v => v.Branches)
-                .ThenInclude(b => b.Lga));
+                .ThenInclude(b => b.Lga)
+                .Include(v => v.BusinessType));
 
             if (vendor == null)
                 return ApiResponse<VendorDto>.Fail(null, "Vendor not found", HttpStatusCode.NotFound);
@@ -38,10 +39,22 @@ namespace Chowbro.Modules.Vendors.Handlers.Vendor
             {
                 Id = vendor.Id,
                 BusinessName = vendor.BusinessName,
+                FirstName = vendor.FirstName,
+                LastName = vendor.LastName,
+                RcNumber = vendor.RcNumber,
                 Description = vendor.Description,
-                Status = vendor.Status.ToString(),
                 LogoUrl = vendor.LogoUrl,
                 CoverImageUrl = vendor.CoverImageUrl,
+                CoverPublicId = vendor.CoverPublicId,
+                LogoPublicId = vendor.LogoPublicId,
+                PhoneNumber = vendor.PhoneNumber,
+                Email = vendor.Email,
+                BusinessPhoneNumber = vendor.BusinessPhoneNumber,
+                BusinessEmail = vendor.BusinessEmail,
+                UserId = vendor.UserId,
+                BusinessTypeId = vendor.BusinessTypeId,
+                BusinessTypeName = vendor.BusinessType?.Name,
+                Status = vendor.Status.ToString(),
                 CreatedAt = vendor.CreatedAt,
                 Branches = vendor.Branches.Select(b => new BranchDto
                 {

@@ -27,7 +27,7 @@ namespace Chowbro.Api.Controllers.Vendors
             return StatusCode((int)result.StatusCode, result);
         }
 
-        [HttpPut]
+        [HttpPut("update-store-operation")]
         public async Task<IActionResult> UpdateOperations([FromBody] UpdateStoreOperationCommand command)
         {
             var result = await _mediator.Send(command);

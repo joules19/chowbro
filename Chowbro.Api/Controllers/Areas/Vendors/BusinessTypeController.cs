@@ -14,7 +14,7 @@ namespace Chowbro.Api.Controllers.Areas.Vendors
     [Area("Vendors")]
     [Route("api/vendors/business-types")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin, Vendor")]
     public class BusinessTypeController : ControllerBase
     {
         private readonly IMediator _mediator;

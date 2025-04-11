@@ -54,7 +54,6 @@ namespace Chowbro.Infrastructure.Persistence.Repository.Vendor
                     // Update existing record
                     _context.Entry(existing).CurrentValues.SetValues(operations);
 
-                    // Remove deleted opening hours
                     foreach (var existingHour in existing.OpeningHours.ToList())
                     {
                         if (!operations.OpeningHours.Any(oh => oh.Id == existingHour.Id))

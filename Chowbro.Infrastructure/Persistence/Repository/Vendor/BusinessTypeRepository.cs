@@ -51,4 +51,9 @@ public class BusinessTypeRepository : IBusinessTypeRepository
             await _context.SaveChangesAsync(cancellationToken);
         }
     }
+
+    public async Task<bool> ExistsAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        return await _context.BusinessTypes.AnyAsync(bt => bt.Id == id, cancellationToken);
+    }
 }

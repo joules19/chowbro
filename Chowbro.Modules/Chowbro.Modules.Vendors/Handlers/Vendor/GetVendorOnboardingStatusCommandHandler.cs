@@ -112,7 +112,7 @@ namespace Chowbro.Modules.Vendors.Handlers.Vendor
         private void CalculateCompletion(VendorOnboardingStatusDto status)
         {
             var completedSteps = 0;
-            var totalSteps = 6; // Total number of checks
+            var totalSteps = 6;
 
             if (status.IsPersonalInformationComplete) completedSteps++;
             if (status.IsBusinessInformationComplete) completedSteps++;
@@ -123,7 +123,6 @@ namespace Chowbro.Modules.Vendors.Handlers.Vendor
 
             status.CompletionPercentage = Math.Round((decimal)completedSteps / totalSteps * 100, 2);
 
-            // Populate pending steps
             if (!status.IsPersonalInformationComplete)
                 status.PendingSteps.Add("Personal information");
             if (!status.IsBusinessInformationComplete)

@@ -121,7 +121,15 @@ namespace Chowbro.Infrastructure.Persistence
                 entity.Property(e => e.Name).IsRequired().HasMaxLength(100);
                 entity.Property(e => e.Description).HasMaxLength(500);
                 entity.Property(e => e.IsActive).HasDefaultValue(true);
+
+                // Relationship with Vendor
+                entity.HasMany(bt => bt.Vendors)
+                      .WithOne(v => v.BusinessType)
+                      .HasForeignKey(v => v.BusinessTypeId)
+                      .OnDelete(DeleteBehavior.Restrict);
             });
+
+
 
             // Configure soft delete filter
             builder.Entity<Vendor>().HasQueryFilter(v => !v.IsDeleted);

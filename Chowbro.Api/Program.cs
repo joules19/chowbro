@@ -20,6 +20,7 @@ using Chowbro.Infrastructure.Persistence;
 using Chowbro.Modules.Customers;
 using Chowbro.Modules.Riders;
 using Chowbro.Modules.Vendors;
+using Chowbro.Modules.Vendors.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -148,6 +149,10 @@ using (var scope = app.Services.CreateScope())
 
         var dbContext = services.GetRequiredService<AppDbContext>();
         await NigeriaLocationSeeder.SeedAsync(dbContext);
+        await BusinessTypeSeeder.SeedAsync(dbContext);
+
+
+
     }
     catch (Exception ex)
     {

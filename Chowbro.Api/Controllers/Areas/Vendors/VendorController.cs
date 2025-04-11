@@ -46,13 +46,22 @@ namespace Chowbro.Api.Controllers.Areas.Vendors
         }
 
         [HttpPut("update-vendor")]
-        public async Task<IActionResult> UpdateVendor([FromBody] UpdateVendorRequest request)
+        public async Task<IActionResult> UpdateVendor([FromForm] UpdateVendorRequest request)
         {
             var command = new UpdateVendorCommand(
                 request.BusinessName,
                 request.FirstName,
                 request.LastName,
-                request.Description);
+                request.Description,
+                request.RcNumber,
+                request.LogoFile,
+                request.CoverFile,
+                request.Email,
+                request.PhoneNumber,
+                request.BusinessEmail,
+                request.BusinessPhoneNumber,
+                request.BusinessTypeId
+                );
 
             var result = await _mediator.Send(command);
             return StatusCode((int)result.StatusCode, result);

@@ -29,10 +29,14 @@
     public class BranchDto
     {
         public Guid? Id { get; set; }
+        public Guid? Vendor { get; set; }
+
         public string Name { get; set; }
         public string PhoneNumber { get; set; }
 
-        public string Address { get; set; }
+        public string? Address { get; set; }
+        public string? AltAddress { get; set; }
+
         public string? City { get; set; }
         public Guid StateId { get; set; }
         public Guid LgaId { get; set; }

@@ -5,7 +5,8 @@
         public enum VendorStatus
         {
             PendingApproval,
-            Active,
+            UnderReview,
+            Approved,
             Suspended,
             Rejected
         }

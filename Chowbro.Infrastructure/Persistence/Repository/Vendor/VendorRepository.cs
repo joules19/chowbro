@@ -1,4 +1,5 @@
 ﻿using Chowbro.Core.Entities.Product;
+using Chowbro.Core.Models.Vendor;
 using Chowbro.Core.Repository.Interfaces.Vendor;
 using Microsoft.EntityFrameworkCore;
 using static Chowbro.Core.Enums.Vendor;
@@ -107,6 +108,25 @@ namespace Chowbro.Infrastructure.Persistence.Repository.Vendor
             await UpdateAsync(vendor, cancellationToken);
         }
 
+
+        public async Task AddBranchAsync(Branch branch, CancellationToken cancellationToken = default)
+        {
+            await _context.Branches.AddAsync(branch, cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
+        }
+
+        public async Task UpdateBranchAsync(Branch branch, CancellationToken cancellationToken = default)
+        {
+            _context.Branches.Update(branch);
+            await _context.SaveChangesAsync(cancellationToken);
+        }
+        public async Task DeleteBranchAsync(Branch branch, CancellationToken cancellationToken = default)
+        {
+            branch.IsDeleted = true;
+            branch.DeletedAt = DateTime.UtcNow;
+            await UpdateBranchAsync(branch, cancellationToken);
+        }
+
         public async Task<bool> ExistsAsync(Guid id, CancellationToken cancellationToken = default)
         {
             return await _context.Vendors.AnyAsync(v => v.Id == id, cancellationToken);
@@ -118,6 +138,18 @@ namespace Chowbro.Infrastructure.Persistence.Repository.Vendor
                 .Where(b => b.VendorId == vendorId)
                 .AsNoTracking()
                 .ToListAsync(cancellationToken);
+        }
+
+        public async Task<Branch> GetBranchByIdAsync(Guid id, Func<IQueryable<Branch>, IQueryable<Branch>> include = null, CancellationToken cancellationToken = default)
+        {
+            var query = _context.Branches.AsQueryable();
+
+            if (include != null)
+            {
+                query = include(query);
+            }
+
+            return await query.FirstOrDefaultAsync(b => b.Id == id);
         }
 
         public async Task<IEnumerable<Core.Entities.Product.Product>> GetProductsAsync(Guid vendorId, CancellationToken cancellationToken = default)

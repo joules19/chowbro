@@ -36,60 +36,66 @@ namespace Chowbro.Infrastructure.Persistence.Repository.Vendor
 
         public async Task UpsertAsync(StoreOperation operations, CancellationToken cancellationToken)
         {
-            using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
-
             try
             {
-                var existing = await _context.StoreOperations
+                var existingOperation = await _context.StoreOperations
                     .Include(so => so.OpeningHours)
                     .FirstOrDefaultAsync(so => so.VendorId == operations.VendorId, cancellationToken);
 
-                if (existing == null)
+                if (existingOperation == null)
                 {
-                    // Insert new record
                     await _context.StoreOperations.AddAsync(operations, cancellationToken);
                 }
                 else
                 {
-                    // Update existing record
-                    _context.Entry(existing).CurrentValues.SetValues(operations);
+                    existingOperation.DeliveryType = operations.DeliveryType;
+                    existingOperation.OrderCutoffTime = operations.OrderCutoffTime;
+                    existingOperation.MenuReadyTime = operations.MenuReadyTime;
 
-                    foreach (var existingHour in existing.OpeningHours.ToList())
-                    {
-                        if (!operations.OpeningHours.Any(oh => oh.Id == existingHour.Id))
-                        {
-                            _context.OpeningHours.Remove(existingHour);
-                        }
-                    }
+                    var existingHours = existingOperation.OpeningHours.ToList();
 
-                    // Update or add opening hours
-                    foreach (var hour in operations.OpeningHours)
+                    foreach (var incomingHour in operations.OpeningHours)
                     {
-                        var existingHour = existing.OpeningHours
-                            .FirstOrDefault(oh => oh.Id == hour.Id);
+                        var existingHour = existingHours.FirstOrDefault(oh => oh.Day == incomingHour.Day);
 
                         if (existingHour != null)
                         {
-                            _context.Entry(existingHour).CurrentValues.SetValues(hour);
+                            existingHour.OpenTime = incomingHour.OpenTime;
+                            existingHour.CloseTime = incomingHour.CloseTime;
+                            existingHour.IsClosed = incomingHour.IsClosed;
+                            _context.Entry(existingHour).State = EntityState.Modified;
                         }
                         else
                         {
-                            hour.StoreOperationId = existing.Id;
-                            await _context.OpeningHours.AddAsync(hour, cancellationToken);
+                            var newHour = new OpeningHours
+                            {
+                                Day = incomingHour.Day,
+                                OpenTime = incomingHour.OpenTime,
+                                CloseTime = incomingHour.CloseTime,
+                                IsClosed = incomingHour.IsClosed,
+                                StoreOperationId = existingOperation.Id
+                            };
+                            _context.OpeningHours.Add(newHour);
                         }
+                    }
+
+                    // Remove days not present in the incoming data
+                    var incomingDays = operations.OpeningHours.Select(oh => oh.Day).ToList();
+                    var hoursToRemove = existingHours.Where(oh => !incomingDays.Contains(oh.Day)).ToList();
+
+                    if (hoursToRemove.Any())
+                    {
+                        _context.OpeningHours.RemoveRange(hoursToRemove);
                     }
                 }
 
                 await _context.SaveChangesAsync(cancellationToken);
-                await transaction.CommitAsync(cancellationToken);
             }
             catch (Exception ex)
             {
-                await transaction.RollbackAsync(cancellationToken);
                 _logger.LogError(ex, "Error upserting store operations for vendor {VendorId}", operations.VendorId);
                 throw;
             }
         }
-
     }
 }

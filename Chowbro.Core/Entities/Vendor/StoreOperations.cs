@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Chowbro.Core.Entities.Vendor
 {
     public class StoreOperation : BaseEntity

@@ -23,6 +23,7 @@ namespace Chowbro.Infrastructure.Persistence.Repositories.Location
         public async Task<IEnumerable<Lga>> GetByStateIdAsync(Guid stateId)
         {
             return await _context.Lgas
+            .OrderBy(l => l.Name)
                 .Where(l => l.StateId == stateId)
                 .ToListAsync();
         }

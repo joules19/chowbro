@@ -5,11 +5,12 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Chowbro.Modules.Vendors.Queries;
+using static Chowbro.Core.Enums.Vendor;
 
-namespace Chowbro.Api.Controllers.Areas.Vendors
+namespace Chowbro.Api.Controllers.Areas.Vendor
 {
     [Area("Vendors")]
-    [Route("api/vendors/vendor")]
+    [Route("api/vendor/vendor")]
     [ApiController]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Vendor")]
     public class VendorController : ControllerBase
@@ -52,8 +53,8 @@ namespace Chowbro.Api.Controllers.Areas.Vendors
                 request.BusinessName,
                 request.FirstName,
                 request.LastName,
-                request.Description,
                 request.RcNumber,
+                request.Description,
                 request.LogoFile,
                 request.CoverFile,
                 request.Email,
@@ -67,6 +68,21 @@ namespace Chowbro.Api.Controllers.Areas.Vendors
             return StatusCode((int)result.StatusCode, result);
         }
 
+        [HttpPut("update-vendor-status")]
+        public async Task<IActionResult> UpdateVendorStatus([FromBody] UpdateVendorStatusCommand command)
+        {
+            var result = await _mediator.Send(command);
+            return StatusCode((int)result.StatusCode, result);
+        }
+
+        [HttpPut("finish-onboarding")]
+        public async Task<IActionResult> UpdateVendorStatus()
+        {
+            var command = new UpdateVendorStatusCommand(VendorStatus.UnderReview);
+            var result = await _mediator.Send(command);
+            return StatusCode((int)result.StatusCode, result);
+        }
+
         [HttpGet("onboarding-status")]
         public async Task<IActionResult> GetOnboardingStatus()
         {
@@ -74,7 +90,7 @@ namespace Chowbro.Api.Controllers.Areas.Vendors
             return StatusCode((int)result.StatusCode, result);
         }
 
-        [HttpGet("{vendorId}/branches")]
+        [HttpGet("branches")]
         public async Task<IActionResult> GetVendorBranches(Guid vendorId)
         {
             var query = new GetVendorBranchesQuery(vendorId);
@@ -82,11 +98,32 @@ namespace Chowbro.Api.Controllers.Areas.Vendors
             return StatusCode((int)result.StatusCode, result);
         }
 
-        [HttpGet("{vendorId}/main-branch")]
+        [HttpGet("main-branch")]
         public async Task<IActionResult> GetVendorMainBranch(Guid vendorId)
         {
             var query = new GetVendorMainBranchQuery(vendorId);
             var result = await _mediator.Send(query);
+            return StatusCode((int)result.StatusCode, result);
+        }
+
+        [HttpPost("branch/create")]
+        public async Task<IActionResult> CreateBranch([FromBody] CreateBranchCommand command)
+        {
+            var result = await _mediator.Send(command);
+            return StatusCode((int)result.StatusCode, result);
+        }
+
+        [HttpPut("branch/update")]
+        public async Task<IActionResult> UpdateBranch([FromBody] UpdateBranchCommand command)
+        {
+            var result = await _mediator.Send(command);
+            return StatusCode((int)result.StatusCode, result);
+        }
+
+        [HttpDelete("branch/remove")]
+        public async Task<IActionResult> DeleteBranch([FromQuery] Guid id)
+        {
+            var result = await _mediator.Send(new DeleteBranchCommand(id));
             return StatusCode((int)result.StatusCode, result);
         }
     }

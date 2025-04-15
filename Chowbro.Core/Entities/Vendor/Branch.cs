@@ -8,13 +8,15 @@ public class Branch : BaseEntity
     public Guid VendorId { get; set; }
     public Vendor Vendor { get; set; }
 
-    public string Name { get; set; }
-    public string Address { get; set; }
+    public string? Name { get; set; }
+    public string? Address { get; set; }
 
-    public Guid StateId { get; set; }
+    public string? AltAddress { get; set; }
+
+    public Guid? StateId { get; set; }
     public State State { get; set; }
 
-    public Guid LgaId { get; set; }
+    public Guid? LgaId { get; set; }
     public Lga Lga { get; set; }
 
     public string? City { get; set; }

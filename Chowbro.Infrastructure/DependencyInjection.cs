@@ -49,6 +49,7 @@ namespace Chowbro.Infrastructure
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IOtpService, OtpService>();
             services.AddScoped<IDeviceValidationService, DeviceValidationService>();
+            services.AddScoped<ILocationService, LocationService>();
 
 
             services.Configure<VendorApprovalOptions>(configuration.GetSection("VendorApproval"));

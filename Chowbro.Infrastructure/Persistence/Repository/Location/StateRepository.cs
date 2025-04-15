@@ -30,6 +30,7 @@ namespace Chowbro.Infrastructure.Persistence.Repositories.Location
         public async Task<IEnumerable<State>> GetAllAsync()
         {
             return await _context.States
+            .OrderBy(s => s.Name)
                 .Include(s => s.Lgas)
                 .ToListAsync();
         }

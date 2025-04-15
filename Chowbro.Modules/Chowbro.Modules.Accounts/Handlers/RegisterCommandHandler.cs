@@ -49,6 +49,10 @@ namespace Chowbro.Modules.Accounts.Handlers
             {
                 return ApiResponse<OtpResponse>.Fail(null, "Device ID is required", HttpStatusCode.BadRequest);
             }
+            if (model.DateOfBirth < DateTime.UtcNow.AddYears(-15))
+            {
+                return ApiResponse<OtpResponse>.Fail(null, "You must be at least 15 years old to register", HttpStatusCode.BadRequest);
+            }
 
             var existingUser = await _userManager.Users.FirstOrDefaultAsync(u => u.Email == model.Email || u.PhoneNumber == model.PhoneNumber);
 

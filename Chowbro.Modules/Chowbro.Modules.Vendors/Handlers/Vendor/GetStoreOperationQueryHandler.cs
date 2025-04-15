@@ -62,11 +62,13 @@ namespace Chowbro.Modules.Vendors.Handlers.Vendor
             return new StoreOperationDto
             {
                 DeliveryType = operation.DeliveryType,
+                DeliveryTypeName = operation.DeliveryType.ToString(),
                 OrderCutoffTime = operation.OrderCutoffTime?.ToString(@"hh\:mm"),
                 MenuReadyTime = operation.MenuReadyTime?.ToString(@"hh\:mm"),
                 OpeningHours = operation.OpeningHours.Select(oh => new OpeningHoursDto
                 {
                     Day = oh.Day,
+                    DayName = oh.Day.ToString(),
                     OpenTime = oh.OpenTime.ToString(@"hh\:mm"),
                     CloseTime = oh.CloseTime.ToString(@"hh\:mm"),
                     IsClosed = oh.IsClosed
@@ -74,6 +76,4 @@ namespace Chowbro.Modules.Vendors.Handlers.Vendor
             };
         }
     }
-
-
 }

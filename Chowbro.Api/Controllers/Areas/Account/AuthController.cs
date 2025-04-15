@@ -6,10 +6,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using static Chowbro.Api.Filters.DeviceValidationFilter;
 
-namespace Chowbro.Api.Controllers.Areas.Accounts
+namespace Chowbro.Api.Controllers.Areas.Account
 {
     [Area("Accounts")]
-    [Route("api/accounts/[controller]")]
+    [Route("api/account/[controller]")]
     [EnableRateLimiting("strict-auth")]
     //[DisableRateLimiting] 
     [ApiController]
@@ -47,6 +47,7 @@ namespace Chowbro.Api.Controllers.Areas.Accounts
         }
 
         [HttpPost("login")]
+
         public async Task<IActionResult> Login([FromBody] OtpRequestDto request)
         {
             var command = new LoginCommand(request.PhoneNumber!);

@@ -5,9 +5,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Chowbro.Api.Controllers.Vendors
+namespace Chowbro.Api.Controllers.Vendor
 {
-    [Route("api/vendors/store-operation")]
+    [Route("api/vendor/store-operation")]
     [Area("Vendors")]
     [ApiController]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Vendor")]

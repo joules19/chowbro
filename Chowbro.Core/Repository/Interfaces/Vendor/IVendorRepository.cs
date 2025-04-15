@@ -19,6 +19,10 @@ namespace Chowbro.Core.Repository.Interfaces.Vendor
         Task<Entities.Vendor.Vendor> GetVendorByIdAsync(Guid id, Func<IQueryable<Entities.Vendor.Vendor>, IQueryable<Entities.Vendor.Vendor>> include = null);
         Task<List<Branch>> GetBranchesByVendorIdAsync(Guid vendorId, Func<IQueryable<Branch>, IQueryable<Branch>> include = null);
         Task<Branch> GetMainBranchByVendorIdAsync(Guid vendorId, Func<IQueryable<Branch>, IQueryable<Branch>> include = null);
+        Task UpdateBranchAsync(Branch branch, CancellationToken cancellationToken = default);
+        Task DeleteBranchAsync(Branch branch, CancellationToken cancellationToken = default);
+        Task AddBranchAsync(Branch branch, CancellationToken cancellationToken = default);
+        Task<Branch> GetBranchByIdAsync(Guid id, Func<IQueryable<Branch>, IQueryable<Branch>> include = null, CancellationToken cancellationToken = default);
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }

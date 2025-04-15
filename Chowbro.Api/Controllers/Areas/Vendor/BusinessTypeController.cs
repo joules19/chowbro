@@ -9,10 +9,10 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Chowbro.Api.Controllers.Areas.Vendors
+namespace Chowbro.Api.Controllers.Areas.Vendor
 {
     [Area("Vendors")]
-    [Route("api/vendors/business-types")]
+    [Route("api/vendor/business-types")]
     [ApiController]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin, Vendor")]
     public class BusinessTypeController : ControllerBase

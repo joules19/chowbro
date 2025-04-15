@@ -19,7 +19,7 @@ namespace Chowbro.Infrastructure.Services.BackgroundServices
 
         public VendorApprovalService(
             ILogger<VendorApprovalService> logger,
-            IServiceProvider serviceProvider, 
+            IServiceProvider serviceProvider,
             IOptions<VendorApprovalOptions> options)
         {
             _logger = logger;
@@ -43,7 +43,8 @@ namespace Chowbro.Infrastructure.Services.BackgroundServices
                     {
                         if (ShouldApproveVendor(vendor))
                         {
-                            vendor.Status = VendorStatus.Active;
+                            vendor.IsActive = true;
+                            vendor.Status = VendorStatus.Approved;
                             await vendorRepository.UpdateAsync(vendor);
 
                             var vendorDto = mapper.Map<VendorDto>(vendor);

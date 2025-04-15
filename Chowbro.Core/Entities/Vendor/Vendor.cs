@@ -28,6 +28,7 @@ public class Vendor : BaseEntity
     public BusinessType? BusinessType { get; set; }
 
     public VendorStatus Status { get; set; } = VendorStatus.PendingApproval;
+    public bool IsActive { get; set; } = false;
 
     public ICollection<Branch> Branches { get; set; } = new List<Branch>();
     public ICollection<Product.Product> Products { get; set; } = new List<Product.Product>();
